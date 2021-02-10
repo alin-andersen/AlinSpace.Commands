@@ -4,7 +4,7 @@ using Xunit;
 namespace FluentCommands.Tests
 {
     /// <summary>
-    /// Fluent command tests.
+    /// Tests for <see cref="FluentCommand"/> and <see cref="FluentCommand{TParameter}"/>.
     /// </summary>
     public class FluentCommandTests
     {

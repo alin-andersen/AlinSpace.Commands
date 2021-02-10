@@ -30,8 +30,8 @@ namespace FluentCommands.Tests
 
             // Act
 
-            CommandManager
-                .Create()
+            FluentCommandManager
+                .New()
                 .AddGroup(group =>
                 {
                     commandA = group.RegisterCommand(commandMockA.Object);

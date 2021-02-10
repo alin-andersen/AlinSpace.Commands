@@ -3,9 +3,9 @@
 namespace FluentCommands
 {
     /// <summary>
-    /// Extensions for <see cref="ICommandManager"/>.
+    /// Extensions for <see cref="IFluentCommandManager"/>.
     /// </summary>
-    public static class CommandManagerExtensions
+    public static class FluentCommandManagerExtensions
     {
         /// <summary>
         /// When executing a command from this execution group lock all groups.
@@ -13,18 +13,18 @@ namespace FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static ICommandManager LockAll(this ICommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
+        public static IFluentCommandManager LockAll(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
         {
             return commandManager.AddGroup(executionGroupCallback, ExecutionLock.LockAllGroups);
         }
 
         /// <summary>
-        /// When executing a command from this execution group lock all others groups.
+        /// When executing a command from this execution group lock all other groups.
         /// </summary>
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static ICommandManager LockOtherGroups(this ICommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
+        public static IFluentCommandManager LockOthers(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
         {
             return commandManager.AddGroup(executionGroupCallback, ExecutionLock.LockAllOthersGroups);
         }
@@ -35,7 +35,7 @@ namespace FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static ICommandManager LockThisGroup(this ICommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
+        public static IFluentCommandManager LockThis(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
         {
             return commandManager.AddGroup(executionGroupCallback, ExecutionLock.LockThisGroup);
         }
