@@ -3,7 +3,7 @@
     /// <summary>
     /// Execution behaviour.
     /// </summary>
-    public enum LockBehaviour
+    public enum LockBehavior
     {
         /// <summary>
         /// Lock all groups.

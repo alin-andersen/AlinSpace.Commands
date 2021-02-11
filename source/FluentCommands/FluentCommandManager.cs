@@ -81,7 +81,7 @@ namespace FluentCommands
         /// <param name="exectionGroupCallback">Execution group callback.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        public IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, LockBehaviour @lock = LockBehaviour.LockAllGroups)
+        public IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, LockBehavior @lock = LockBehavior.LockAllGroups)
         {
             var executionGroup = new ExecutionGroup(
                 commandManager: this,
@@ -102,7 +102,7 @@ namespace FluentCommands
         /// <returns>Enumerable of execution groups that shall be locked.</returns>
         IEnumerable<ExecutionGroup> GetExecutionGroupsToLock(ExecutionGroup executionGroup)
         {
-            if (executionGroup.Lock == LockBehaviour.LockThisGroup)
+            if (executionGroup.Lock == LockBehavior.LockThisGroup)
                 return new[] { executionGroup };
 
             IList<ExecutionGroup> executionGroupsToLock = new List<ExecutionGroup>();
@@ -111,7 +111,7 @@ namespace FluentCommands
             {
                 if (ReferenceEquals(ex, executionGroup))
                 {
-                    if (executionGroup.Lock == LockBehaviour.LockAllOthersGroups)
+                    if (executionGroup.Lock == LockBehavior.LockAllOthersGroups)
                         continue;
                 }
                 
@@ -315,7 +315,7 @@ namespace FluentCommands
             /// <summary>
             /// Execution lock.
             /// </summary>
-            public LockBehaviour Lock { get; }
+            public LockBehavior Lock { get; }
 
             /// <summary>
             /// Is locked.
@@ -330,7 +330,7 @@ namespace FluentCommands
             /// <summary>
             /// Constructor.
             /// </summary>
-            public ExecutionGroup(FluentCommandManager commandManager, LockBehaviour @lock)
+            public ExecutionGroup(FluentCommandManager commandManager, LockBehavior @lock)
             {
                 this.commandManager = commandManager;
                 Lock = @lock;
