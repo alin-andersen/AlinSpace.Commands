@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FluentCommands
+﻿namespace FluentCommands
 {
     /// <summary>
-    /// Execution lock.
+    /// Execution behaviour..
     /// </summary>
-    public enum ExecutionLock
+    public enum LockBehaviour
     {
         /// <summary>
         /// Lock all groups.

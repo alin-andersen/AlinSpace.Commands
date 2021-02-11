@@ -17,11 +17,11 @@ namespace FluentCommands.Tests
 
             var command = FluentCommand
                 .New()
-                .OnExecute(p => executeFlag = true);
+                .OnExecuteAsync(async p => executeFlag = true);
 
             // Act
 
-            command.Execute(null);
+            command.ExecuteAsync(null).Wait();
 
             // Assert
 
@@ -39,7 +39,7 @@ namespace FluentCommands.Tests
             var command = FluentCommand
                 .New()
                 .OnCanExecute(_ => false)
-                .OnExecute(_ => executeFlag = true);
+                .OnExecuteAsync(async _ => executeFlag = true);
 
             // Act
 

@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace FluentCommands
 {
     /// <summary>
-    /// Fluent command.
+    /// Default implementation of <see cref="IFluentCommand"/>.
     /// </summary>
-    public class FluentCommand : ICommand
+    public class FluentCommand : IFluentCommand
     {
         readonly bool verifyCanExecuteBeforeExecution;
+        readonly bool continueOnCapturedContext;
 
-        Action<object> executeAction;
-        Func<object, bool> canExecuteAction;
+        Func<object, Task> executeFunc;
+        Func<object, bool> canExecuteFunc;
 
         /// <summary>
         /// Can execute changed.
@@ -22,56 +23,50 @@ namespace FluentCommands
         /// Static factory method.
         /// </summary>
         /// <param name="verifyCanExecuteBeforeExecution"></param>
+        /// <param name="continueOnCapturedContext"></param>
         /// <returns>Fluent command.</returns>
-        public static FluentCommand New(bool verifyCanExecuteBeforeExecution = false)
+        public static FluentCommand New(
+            bool verifyCanExecuteBeforeExecution = false,
+            bool continueOnCapturedContext = true)
         {
-            return new FluentCommand(verifyCanExecuteBeforeExecution);
+            return new FluentCommand(
+                verifyCanExecuteBeforeExecution,
+                continueOnCapturedContext);
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="verifyCanExecuteBeforeExecution"></param>
-        public FluentCommand(bool verifyCanExecuteBeforeExecution = false)
+        /// <param name="continueOnCapturedContext"></param>
+        public FluentCommand(
+            bool verifyCanExecuteBeforeExecution = false,
+            bool continueOnCapturedContext = true)
         {
             this.verifyCanExecuteBeforeExecution = verifyCanExecuteBeforeExecution;
+            this.continueOnCapturedContext = continueOnCapturedContext;
         }
 
         /// <summary>
-        /// Execute action.
+        /// On can execute callback.
         /// </summary>
-        /// <param name="executeAction"></param>
+        /// <param name="executeFunc"></param>
         /// <returns>Fluent command.</returns>
-        public FluentCommand OnExecute(Action<object> executeAction)
+        public FluentCommand OnCanExecute(Func<object, bool> canExecuteFunc)
         {
-            this.executeAction = executeAction;
+            this.canExecuteFunc = canExecuteFunc;
             return this;
         }
 
         /// <summary>
-        /// Execute action.
+        /// On execute asynchronously callback.
         /// </summary>
         /// <param name="executeAction"></param>
         /// <returns>Fluent command.</returns>
-        public FluentCommand OnCanExecute(Func<object, bool> canExecuteAction)
+        public FluentCommand OnExecuteAsync(Func<object, Task> executeFunc)
         {
-            this.canExecuteAction = canExecuteAction;
+            this.executeFunc = executeFunc;
             return this;
-        }
-
-        /// <summary>
-        /// Execute.
-        /// </summary>
-        /// <param name="parameter">Parameter.</param>
-        public void Execute(object parameter)
-        {
-            if (verifyCanExecuteBeforeExecution)
-            {
-                if (!CanExecute(parameter))
-                    return;
-            }
-
-            executeAction?.Invoke(parameter);
         }
 
         /// <summary>
@@ -79,21 +74,41 @@ namespace FluentCommands
         /// </summary>
         /// <param name="parameter">Parameter.</param>
         /// <returns>True if can execute; false otherwise.</returns>
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object parameter = null)
         {
-            return canExecuteAction?.Invoke(parameter) ?? true;
+            return canExecuteFunc?.Invoke(parameter) ?? true;
+        }
+
+        /// <summary>
+        /// Execute command asynchronously.
+        /// </summary>
+        /// <param name="parameter">Command parameter.</param>
+        /// <returns>Task.</returns>
+        public async Task ExecuteAsync(object parameter = null)
+        {
+            if (executeFunc == null)
+                return;
+
+            if (verifyCanExecuteBeforeExecution)
+            {
+                if (!CanExecute(parameter))
+                    return;
+            }
+
+            await executeFunc(parameter).ConfigureAwait(continueOnCapturedContext);
         }
     }
 
     /// <summary>
-    /// Fluent command.
+    /// Default implementation of <see cref="IFluentCommand{TParameter}"/>.
     /// </summary>
-    public class FluentCommand<TParameter> : ICommand
+    public class FluentCommand<TParameter> : IFluentCommand<TParameter>
     {
         readonly bool verifyCanExecuteBeforeExecution;
+        readonly bool continueOnCapturedContext;
 
-        Action<TParameter> executeAction;
-        Func<TParameter, bool> canExecuteAction;
+        Func<TParameter, Task> executeFunc;
+        Func<TParameter, bool> canExecuteFunc;
 
         /// <summary>
         /// Can execute changed.
@@ -103,85 +118,80 @@ namespace FluentCommands
         /// <summary>
         /// Static factory method.
         /// </summary>
+        /// <param name="verifyCanExecuteBeforeExecution"></param>
+        /// <param name="continueOnCapturedContext"></param>
         /// <returns>Fluent command.</returns>
-        public static FluentCommand<TParameter> New(bool verifyCanExecuteBeforeExecution = false)
+        public static FluentCommand New(
+            bool verifyCanExecuteBeforeExecution = false,
+            bool continueOnCapturedContext = true)
         {
-            return new FluentCommand<TParameter>(verifyCanExecuteBeforeExecution);
+            return new FluentCommand(
+                verifyCanExecuteBeforeExecution,
+                continueOnCapturedContext);
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="verifyCanExecuteBeforeExecution"></param>
-        public FluentCommand(bool verifyCanExecuteBeforeExecution = false)
+        /// <param name="continueOnCapturedContext"></param>
+        public FluentCommand(
+            bool verifyCanExecuteBeforeExecution = false,
+            bool continueOnCapturedContext = true)
         {
             this.verifyCanExecuteBeforeExecution = verifyCanExecuteBeforeExecution;
+            this.continueOnCapturedContext = continueOnCapturedContext;
         }
 
         /// <summary>
-        /// Execute action.
+        /// On can execute callback.
         /// </summary>
-        /// <param name="executeAction"></param>
+        /// <param name="executeFunc"></param>
         /// <returns>Fluent command.</returns>
-        public FluentCommand<TParameter> OnExecute(Action<TParameter> executeAction)
+        public FluentCommand<TParameter> OnCanExecute(Func<TParameter, bool> canExecuteFunc)
         {
-            this.executeAction = executeAction;
+            this.canExecuteFunc = canExecuteFunc;
             return this;
         }
 
         /// <summary>
-        /// Execute action.
+        /// On execute asynchronously callback.
         /// </summary>
         /// <param name="executeAction"></param>
         /// <returns>Fluent command.</returns>
-        public FluentCommand<TParameter> OnCanExecute(Func<TParameter, bool> canExecuteAction)
+        public FluentCommand<TParameter> OnExecuteAsync(Func<TParameter, Task> executeFunc)
         {
-            this.canExecuteAction = canExecuteAction;
+            this.executeFunc = executeFunc;
             return this;
         }
 
         /// <summary>
-        /// Execute.
+        /// Can command execute.
         /// </summary>
-        /// <param name="parameter">Parameter.</param>
-        public void Execute(object parameter)
+        /// <param name="parameter">Command parameter.</param>
+        /// <returns>True, if command can be executed; false otherwise.</returns>
+        public bool CanExecute(TParameter parameter = default)
         {
-            Execute((TParameter)parameter);
+            return canExecuteFunc?.Invoke(parameter) ?? true;
         }
 
         /// <summary>
-        /// Execute.
+        /// Execute command asynchronously.
         /// </summary>
-        /// <param name="parameter">Parameter.</param>
-        public void Execute(TParameter parameter)
+        /// <param name="parameter">Command parameter.</param>
+        /// <returns>Task.</returns>
+        public async Task ExecuteAsync(TParameter parameter = default)
         {
+            if (executeFunc == null)
+                return;
+
             if (verifyCanExecuteBeforeExecution)
             {
                 if (!CanExecute(parameter))
                     return;
             }
 
-            executeAction?.Invoke(parameter);
-        }
-
-        /// <summary>
-        /// Can execute.
-        /// </summary>
-        /// <param name="parameter">Parameter.</param>
-        /// <returns>True if can execute; false otherwise.</returns>
-        public bool CanExecute(object parameter)
-        {
-            return CanExecute((TParameter)parameter);
-        }
-
-        /// <summary>
-        /// Can execute.
-        /// </summary>
-        /// <param name="parameter">Parameter.</param>
-        /// <returns>True if can execute; false otherwise.</returns>
-        public bool CanExecute(TParameter parameter)
-        {
-            return canExecuteAction?.Invoke(parameter) ?? true;
+            await executeFunc(parameter).ConfigureAwait(continueOnCapturedContext);
         }
     }
 }

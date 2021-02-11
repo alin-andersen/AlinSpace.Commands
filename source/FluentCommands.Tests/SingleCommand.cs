@@ -28,12 +28,12 @@ namespace FluentCommands.Tests
 
             // Act
 
-            FluentCommandManager
-                .New()
-                .AddGroup(group =>
-                {
-                    command = group.RegisterCommand(commandMock.Object);
-                });
+            //FluentCommandManager
+            //    .New()
+            //    .AddGroup(group =>
+            //    {
+            //        command = group.Register(commandMock.Object);
+            //    });
 
             // Assert
             
@@ -59,12 +59,12 @@ namespace FluentCommands.Tests
 
             // Act
 
-            FluentCommandManager
-                .New(ignoreIndividualCanExecute: true)
-                .AddGroup(group =>
-                {
-                    command = group.RegisterCommand(commandMock.Object);
-                });
+            //FluentCommandManager
+            //    .New(ignoreIndividualCanExecute: true)
+            //    .AddGroup(group =>
+            //    {
+            //        command = group.Register(commandMock.Object);
+            //    });
 
             // Assert
 

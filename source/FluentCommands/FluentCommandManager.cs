@@ -6,14 +6,33 @@ using System.Windows.Input;
 namespace FluentCommands
 {
     /// <summary>
-    /// Implementation of <see cref="IFluentCommandManager"/>.
+    /// Default implementation of <see cref="IFluentCommandManager"/>.
     /// </summary>
     public class FluentCommandManager : IFluentCommandManager
     {
-        readonly bool verifyCanExecuteBeforeExecution;
-        readonly bool ignoreIndividualCanExecute;
-        readonly bool ignoreExceptionsFromCommands;
+        /// <summary>
+        /// Verify CanExecute allows execution before invoking a command.
+        /// </summary>
+        public bool VerifyCanExecuteBeforeExecution { get; }
 
+        /// <summary>
+        /// Ignore CanExecute of all commands.
+        /// </summary>
+        public bool IgnoreIndividualCanExecute { get; }
+
+        /// <summary>
+        /// Ignore exceptions thrown from commands.
+        /// </summary>
+        public bool IgnoreExceptionsFromCommands { get; }
+
+        /// <summary>
+        /// Continue on captured context.
+        /// </summary>
+        public bool ContinueOnCapturedContext { get; }
+
+        /// <summary>
+        /// Execution groups.
+        /// </summary>
         readonly IList<ExecutionGroup> executionGroups = new List<ExecutionGroup>();
 
         /// <summary>
@@ -22,16 +41,19 @@ namespace FluentCommands
         /// <param name="verifyCanExecuteBeforeExecution"></param>
         /// <param name="ignoreIndividualCanExecute"></param>
         /// <param name="ignoreExceptionsFromCommands"></param>
+        /// <param name="continueOnCapturedContext"></param>
         /// <returns>Command manager.</returns>
         public static FluentCommandManager New(
             bool verifyCanExecuteBeforeExecution = false,
             bool ignoreIndividualCanExecute = false,
-            bool ignoreExceptionsFromCommands = true)
+            bool ignoreExceptionsFromCommands = true,
+            bool continueOnCapturedContext = true)
         {
             return new FluentCommandManager(
                 verifyCanExecuteBeforeExecution, 
                 ignoreIndividualCanExecute,
-                ignoreExceptionsFromCommands);
+                ignoreExceptionsFromCommands,
+                continueOnCapturedContext);
         }
 
         /// <summary>
@@ -40,14 +62,17 @@ namespace FluentCommands
         /// <param name="verifyCanExecuteBeforeExecution"></param>
         /// <param name="ignoreIndividualCanExecute"></param>
         /// <param name="ignoreExceptionsFromCommands"></param>
+        /// <param name="continueOnCapturedContext"></param>
         public FluentCommandManager(
             bool verifyCanExecuteBeforeExecution = false, 
             bool ignoreIndividualCanExecute = false,
-            bool ignoreExceptionsFromCommands = true)
+            bool ignoreExceptionsFromCommands = true,
+            bool continueOnCapturedContext = true)
         {
-            this.verifyCanExecuteBeforeExecution = verifyCanExecuteBeforeExecution;
-            this.ignoreIndividualCanExecute = ignoreIndividualCanExecute;
-            this.ignoreExceptionsFromCommands = ignoreExceptionsFromCommands;
+            VerifyCanExecuteBeforeExecution = verifyCanExecuteBeforeExecution;
+            IgnoreIndividualCanExecute = ignoreIndividualCanExecute;
+            IgnoreExceptionsFromCommands = ignoreExceptionsFromCommands;
+            ContinueOnCapturedContext = continueOnCapturedContext;
         }
 
         /// <summary>
@@ -56,7 +81,7 @@ namespace FluentCommands
         /// <param name="exectionGroupCallback">Execution group callback.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        public IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, ExecutionLock @lock = ExecutionLock.LockAllGroups)
+        public IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, LockBehaviour @lock = LockBehaviour.LockAllGroups)
         {
             var executionGroup = new ExecutionGroup(
                 commandManager: this,
@@ -68,9 +93,16 @@ namespace FluentCommands
             return this;
         }
 
+        #region Internal
+
+        /// <summary>
+        /// Get execution groups to lock for the given execution group.
+        /// </summary>
+        /// <param name="executionGroup">Execition group.</param>
+        /// <returns>Enumerable of execution groups that shall be locked.</returns>
         IEnumerable<ExecutionGroup> GetExecutionGroupsToLock(ExecutionGroup executionGroup)
         {
-            if (executionGroup.Lock == ExecutionLock.LockThisGroup)
+            if (executionGroup.Lock == LockBehaviour.LockThisGroup)
                 return new[] { executionGroup };
 
             IList<ExecutionGroup> executionGroupsToLock = new List<ExecutionGroup>();
@@ -79,7 +111,7 @@ namespace FluentCommands
             {
                 if (ReferenceEquals(ex, executionGroup))
                 {
-                    if (executionGroup.Lock == ExecutionLock.LockAllOthersGroups)
+                    if (executionGroup.Lock == LockBehaviour.LockAllOthersGroups)
                         continue;
                 }
                 
@@ -89,23 +121,23 @@ namespace FluentCommands
             return executionGroupsToLock;
         }
 
-        void StartExecution(ExecutionGroup executionGroup)
+        void LockExecutionGroup(ExecutionGroup executionGroup)
         {
             var groups = GetExecutionGroupsToLock(executionGroup);
 
             groups.ForEach(group => Interlocked.Increment(ref group.LockedCounter));
-            groups.ForEach(group => RaiseCanExecuteChangedForGroup(group));
+            groups.ForEach(group => RaiseCanExecuteChangedForExecutionGroup(group));
         }
 
-        void EndExecution(ExecutionGroup executionGroup)
+        void UnlockExecutionGroup(ExecutionGroup executionGroup)
         {
             var groups = GetExecutionGroupsToLock(executionGroup);
 
             groups.ForEach(group => Interlocked.Decrement(ref group.LockedCounter));
-            groups.ForEach(group => RaiseCanExecuteChangedForGroup(group));
+            groups.ForEach(group => RaiseCanExecuteChangedForExecutionGroup(group));
         }
 
-        void RaiseCanExecuteChangedForGroup(ExecutionGroup executionGroup)
+        void RaiseCanExecuteChangedForExecutionGroup(ExecutionGroup executionGroup)
         {
             foreach (var executionGroupCommand in executionGroup.Commands)
             {
@@ -115,7 +147,7 @@ namespace FluentCommands
                 }
                 catch(Exception)
                 {
-                    if (ignoreExceptionsFromCommands)
+                    if (IgnoreExceptionsFromCommands)
                         return;
 
                     throw;
@@ -133,7 +165,7 @@ namespace FluentCommands
             /// <summary>
             /// Execution lock.
             /// </summary>
-            public ExecutionLock Lock { get; }
+            public LockBehaviour Lock { get; }
 
             /// <summary>
             /// Is locked.
@@ -143,12 +175,12 @@ namespace FluentCommands
             /// <summary>
             /// Commands.
             /// </summary>
-            public IList<ExecutionGroupCommand> Commands = new List<ExecutionGroupCommand>();
+            public IList<ICanExecuteChangedCommand> Commands = new List<ICanExecuteChangedCommand>();
 
             /// <summary>
             /// Constructor.
             /// </summary>
-            public ExecutionGroup(FluentCommandManager commandManager, ExecutionLock @lock)
+            public ExecutionGroup(FluentCommandManager commandManager, LockBehaviour @lock)
             {
                 this.commandManager = commandManager;
                 Lock = @lock;
@@ -159,7 +191,7 @@ namespace FluentCommands
             /// </summary>
             /// <param name="command">Command to register.</param>
             /// <returns>Registered command.</returns>
-            public ICommand RegisterCommand(ICommand command)
+            public ICommand Register(IFluentCommand command)
             {
                 var executionGroupCommand = new ExecutionGroupCommand(
                     commandManager: commandManager,
@@ -175,121 +207,237 @@ namespace FluentCommands
             /// </summary>
             /// <param name="command">Command to register.</param>
             /// <returns>Registered command.</returns>
-            public ICommand RegisterCommand(IAsyncCommand command)
+            public ICommand Register<TParameter>(IFluentCommand<TParameter> command)
             {
-                var executionGroupCommand = new ExecutionGroupCommand(
+                var executionGroupCommand = new ExecutionGroupCommand<TParameter>(
                     commandManager: commandManager,
                     executionGroup: this,
                     originalCommand: command);
 
                 Commands.Add(executionGroupCommand);
-                return executionGroupCommand;
+                return (executionGroupCommand);
+            }
+        }
+
+        /// <summary>
+        /// Can execute changed command.
+        /// </summary>
+        interface ICanExecuteChangedCommand : ICommand
+        {
+            /// <summary>
+            /// Raise can execute changed.
+            /// </summary>
+            void RaiseCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Execution group command.
+        /// </summary>
+        class ExecutionGroupCommand : ICanExecuteChangedCommand
+        {
+            readonly FluentCommandManager commandManager;
+            readonly ExecutionGroup executionGroup;
+            readonly IFluentCommand originalCommand;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            public ExecutionGroupCommand(
+                FluentCommandManager commandManager,
+                ExecutionGroup executionGroup,
+                IFluentCommand originalCommand)
+            {
+                this.commandManager = commandManager;
+                this.executionGroup = executionGroup;
+                this.originalCommand = originalCommand;
+
+                this.originalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
             }
 
             /// <summary>
-            /// Execution group command.
+            /// Can execute changed.
             /// </summary>
-            public class ExecutionGroupCommand : ICommand
+            public event EventHandler CanExecuteChanged = delegate { };
+
+            /// <summary>
+            /// Raise can execute changed.
+            /// </summary>
+            public void RaiseCanExecuteChanged()
             {
-                readonly FluentCommandManager commandManager;
-                readonly ExecutionGroup executionGroup;
-                readonly ICommand originalCommand;
-
-                /// <summary>
-                /// Constructor.
-                /// </summary>
-                public ExecutionGroupCommand(
-                    FluentCommandManager commandManager,
-                    ExecutionGroup executionGroup, 
-                    ICommand originalCommand)
+                try
                 {
-                    this.commandManager = commandManager;
-                    this.executionGroup = executionGroup;
-                    this.originalCommand = originalCommand;
+                    CanExecuteChanged(this, EventArgs.Empty);
                 }
-
-                /// <summary>
-                /// Can execute changed.
-                /// </summary>
-                public event EventHandler CanExecuteChanged = delegate { };
-
-                /// <summary>
-                /// Raise can execute changed.
-                /// </summary>
-                public void RaiseCanExecuteChanged()
+                catch (Exception)
                 {
-                    try
-                    {
-                        CanExecuteChanged(this, EventArgs.Empty);
-                    }
-                    catch(Exception)
-                    {
-                        if (commandManager.ignoreExceptionsFromCommands)
-                            return;
+                    if (commandManager.IgnoreExceptionsFromCommands)
+                        return;
 
-                        throw;
-                    }
+                    throw;
                 }
+            }
 
-                public bool CanExecute(object parameter)
+            public bool CanExecute(object parameter)
+            {
+                // Check if execution group allows the command to execute.
+                if (executionGroup.LockedCounter > 0)
+                    return false;
+
+                // Check if we should ignore the individual can execute method.
+                if (commandManager.IgnoreIndividualCanExecute)
+                    return true;
+
+                try
                 {
-                    // Check if execution group allows the command to execute.
-                    if (executionGroup.LockedCounter > 0)
+                    return originalCommand.CanExecute(parameter);
+                }
+                catch (Exception)
+                {
+                    // If an exception is thrown, and we should ignore it,
+                    // then we will simply say the command shall not be called.
+                    if (commandManager.IgnoreExceptionsFromCommands)
                         return false;
 
-                    // Check if we should ignore the individual can execute method.
-                    if (commandManager.ignoreIndividualCanExecute)
-                        return true;
+                    throw;
+                }
+            }
 
-                    try
-                    {
-                        return originalCommand.CanExecute(parameter);
-                    }
-                    catch (Exception)
-                    {
-                        // If an exception is thrown, and we should ignore it,
-                        // then we will simply say the command shall not be called.
-                        if (commandManager.ignoreExceptionsFromCommands)
-                            return false;
-
-                        throw;
-                    }
+            public async void Execute(object parameter)
+            {
+                if (commandManager.VerifyCanExecuteBeforeExecution)
+                {
+                    if (!CanExecute(parameter))
+                        return;
                 }
 
-                public async void Execute(object parameter)
+                try
                 {
-                    if (commandManager.verifyCanExecuteBeforeExecution)
-                    {
-                        if (!CanExecute(parameter))
-                            return;
-                    }
+                    commandManager.LockExecutionGroup(executionGroup);
+                    await originalCommand.ExecuteAsync(parameter).ConfigureAwait(commandManager.ContinueOnCapturedContext);
+                }
+                catch (Exception)
+                {
+                    if (commandManager.IgnoreExceptionsFromCommands)
+                        return;
 
-                    try
-                    {
-                        commandManager.StartExecution(executionGroup);
-                     
-                        if (originalCommand is IAsyncCommand originalAsyncCommand)
-                        {
-                            await originalAsyncCommand.ExecuteAsync(parameter);
-                        }
-                        else
-                        {
-                            originalCommand.Execute(parameter);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        if (commandManager.ignoreExceptionsFromCommands)
-                            return;
-
-                        throw;
-                    }
-                    finally
-                    {
-                        commandManager.EndExecution(executionGroup);
-                    }
+                    throw;
+                }
+                finally
+                {
+                    commandManager.UnlockExecutionGroup(executionGroup);
                 }
             }
         }
+
+        /// <summary>
+        /// Execution group command (generic).
+        /// </summary>
+        class ExecutionGroupCommand<TParameter> : ICanExecuteChangedCommand
+        {
+            readonly FluentCommandManager commandManager;
+            readonly ExecutionGroup executionGroup;
+            readonly IFluentCommand<TParameter> originalCommand;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            public ExecutionGroupCommand(
+                FluentCommandManager commandManager,
+                ExecutionGroup executionGroup,
+                IFluentCommand<TParameter> originalCommand)
+            {
+                this.commandManager = commandManager;
+                this.executionGroup = executionGroup;
+                this.originalCommand = originalCommand;
+
+                this.originalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
+            }
+
+            /// <summary>
+            /// Can execute changed.
+            /// </summary>
+            public event EventHandler CanExecuteChanged = delegate { };
+
+            /// <summary>
+            /// Raise can execute changed.
+            /// </summary>
+            public void RaiseCanExecuteChanged()
+            {
+                try
+                {
+                    CanExecuteChanged(this, EventArgs.Empty);
+                }
+                catch (Exception)
+                {
+                    if (commandManager.IgnoreExceptionsFromCommands)
+                        return;
+
+                    throw;
+                }
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return CanExecute((TParameter)parameter);
+            }
+
+            public bool CanExecute(TParameter parameter)
+            {
+                // Check if execution group allows the command to execute.
+                if (executionGroup.LockedCounter > 0)
+                    return false;
+
+                // Check if we should ignore the individual can execute method.
+                if (commandManager.IgnoreIndividualCanExecute)
+                    return true;
+
+                try
+                {
+                    return originalCommand.CanExecute(parameter);
+                }
+                catch (Exception)
+                {
+                    // If an exception is thrown, and we should ignore it,
+                    // then we will simply say the command shall not be called.
+                    if (commandManager.IgnoreExceptionsFromCommands)
+                        return false;
+
+                    throw;
+                }
+            }
+
+            public void Execute(object parameter)
+            {
+                Execute((TParameter)parameter);
+            }
+
+            public async void Execute(TParameter parameter)
+            {
+                if (commandManager.VerifyCanExecuteBeforeExecution)
+                {
+                    if (!CanExecute(parameter))
+                        return;
+                }
+
+                try
+                {
+                    commandManager.LockExecutionGroup(executionGroup);
+                    await originalCommand.ExecuteAsync(parameter).ConfigureAwait(commandManager.ContinueOnCapturedContext);
+                }
+                catch (Exception)
+                {
+                    if (commandManager.IgnoreExceptionsFromCommands)
+                        return;
+
+                    throw;
+                }
+                finally
+                {
+                    commandManager.UnlockExecutionGroup(executionGroup);
+                }
+            }
+        }
+
+        #endregion
     }
 }

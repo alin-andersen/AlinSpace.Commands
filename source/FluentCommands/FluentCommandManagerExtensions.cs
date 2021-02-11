@@ -15,7 +15,7 @@ namespace FluentCommands
         /// <returns>Command manager.</returns>
         public static IFluentCommandManager LockAll(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
         {
-            return commandManager.AddGroup(executionGroupCallback, ExecutionLock.LockAllGroups);
+            return commandManager.AddGroup(executionGroupCallback, LockBehaviour.LockAllGroups);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace FluentCommands
         /// <returns>Command manager.</returns>
         public static IFluentCommandManager LockOthers(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
         {
-            return commandManager.AddGroup(executionGroupCallback, ExecutionLock.LockAllOthersGroups);
+            return commandManager.AddGroup(executionGroupCallback, LockBehaviour.LockAllOthersGroups);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace FluentCommands
         /// <returns>Command manager.</returns>
         public static IFluentCommandManager LockThis(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
         {
-            return commandManager.AddGroup(executionGroupCallback, ExecutionLock.LockThisGroup);
+            return commandManager.AddGroup(executionGroupCallback, LockBehaviour.LockThisGroup);
         }
     }
 }

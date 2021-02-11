@@ -13,6 +13,6 @@ namespace FluentCommands
         /// <param name="exectionGroupCallback">Execution group callback.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, ExecutionLock @lock = ExecutionLock.LockAllGroups);
+        IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, LockBehaviour @lock = LockBehaviour.LockAllGroups);
     }
 }

@@ -30,13 +30,13 @@ namespace FluentCommands.Tests
 
             // Act
 
-            FluentCommandManager
-                .New()
-                .AddGroup(group =>
-                {
-                    commandA = group.RegisterCommand(commandMockA.Object);
-                    commandB = group.RegisterCommand(commandMockB.Object);
-                });
+            //FluentCommandManager
+            //    .New()
+            //    .AddGroup(group =>
+            //    {
+            //        commandA = group.Register(commandMockA.Object);
+            //        commandB = group.Register(commandMockB.Object);
+            //    });
 
             // Assert
 

@@ -12,13 +12,13 @@ namespace FluentCommands
         /// </summary>
         /// <param name="command">Command to register.</param>
         /// <returns>Registered command.</returns>
-        ICommand RegisterCommand(ICommand command);
+        ICommand Register(IFluentCommand command);
 
         /// <summary>
         /// Register command to the execution group.
         /// </summary>
         /// <param name="command">Command to register.</param>
         /// <returns>Registered command.</returns>
-        ICommand RegisterCommand(IAsyncCommand command);
+        ICommand Register<TParameter>(IFluentCommand<TParameter> command);
     }
 }
