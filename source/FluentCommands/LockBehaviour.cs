@@ -1,7 +1,7 @@
 ﻿namespace FluentCommands
 {
     /// <summary>
-    /// Execution behaviour..
+    /// Execution behaviour.
     /// </summary>
     public enum LockBehaviour
     {

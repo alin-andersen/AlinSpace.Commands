@@ -121,6 +121,12 @@ namespace FluentCommands
             return executionGroupsToLock;
         }
 
+        #region Locking / Unlocking
+
+        /// <summary>
+        /// Lock execution group.
+        /// </summary>
+        /// <param name="executionGroup">Execution group to lock.</param>
         void LockExecutionGroup(ExecutionGroup executionGroup)
         {
             var groups = GetExecutionGroupsToLock(executionGroup);
@@ -129,6 +135,10 @@ namespace FluentCommands
             groups.ForEach(group => RaiseCanExecuteChangedForExecutionGroup(group));
         }
 
+        /// <summary>
+        /// Unlock execution group.
+        /// </summary>
+        /// <param name="executionGroup">Execution group to unlock.</param>
         void UnlockExecutionGroup(ExecutionGroup executionGroup)
         {
             var groups = GetExecutionGroupsToLock(executionGroup);
@@ -137,6 +147,12 @@ namespace FluentCommands
             groups.ForEach(group => RaiseCanExecuteChangedForExecutionGroup(group));
         }
 
+        #endregion
+
+        /// <summary>
+        /// Raise CanExecuteChanged for the given execution group.
+        /// </summary>
+        /// <param name="executionGroup">Execution group.</param>
         void RaiseCanExecuteChangedForExecutionGroup(ExecutionGroup executionGroup)
         {
             foreach (var executionGroupCommand in executionGroup.Commands)
@@ -154,6 +170,140 @@ namespace FluentCommands
                 }
             }
         }
+
+        #region CanExecute / Execute
+
+        /// <summary>
+        /// Can execute command from execution group.
+        /// </summary>
+        /// <param name="command">Execution group command.</param>
+        /// <param name="parameter">Command parameter.</param>
+        /// <returns>True, if the command can execute; false otherwise.</returns>
+        bool CanExecuteCommandFromExecutionGroup(ExecutionGroupCommand command, object parameter)
+        {
+            // Check if execution group allows the command to execute.
+            if (command.ExecutionGroup.LockedCounter > 0)
+                return false;
+
+            // Check if we should ignore the individual can execute method.
+            if (IgnoreIndividualCanExecute)
+                return true;
+
+            try
+            {
+                return command.OriginalCommand.CanExecute(parameter);
+            }
+            catch (Exception)
+            {
+                // If an exception is thrown, and we should ignore it,
+                // then we will simply say the command shall not be called.
+                if (IgnoreExceptionsFromCommands)
+                    return false;
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Execute command from execution group.
+        /// </summary>
+        /// <param name="command">Execution group command.</param>
+        /// <param name="parameter">Command parameter.</param>
+        async void ExecuteCommandFromExecutionGroup(ExecutionGroupCommand command, object parameter)
+        {
+            if (VerifyCanExecuteBeforeExecution)
+            {
+                if (!command.OriginalCommand.CanExecute(parameter))
+                    return;
+            }
+
+            try
+            {
+                LockExecutionGroup(command.ExecutionGroup);
+                
+                await command.OriginalCommand
+                    .ExecuteAsync(parameter)
+                    .ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception)
+            {
+                if (IgnoreExceptionsFromCommands)
+                    return;
+
+                throw;
+            }
+            finally
+            {
+                UnlockExecutionGroup(command.ExecutionGroup);
+            }
+        }
+
+        #endregion
+
+        #region CanExecute / Execute (Generic)
+
+        /// <summary>
+        /// Can execute command from execution group.
+        /// </summary>
+        /// <param name="command">Execution group command.</param>
+        /// <param name="parameter">Command parameter.</param>
+        /// <returns>True, if the command can execute; false otherwise.</returns>
+        bool CanExecuteCommandFromExecutionGroup<TParameter>(ExecutionGroupCommand<TParameter> command, TParameter parameter)
+        {
+            if (command.ExecutionGroup.LockedCounter > 0)
+                return false;
+
+            if (IgnoreIndividualCanExecute)
+                return true;
+
+            try
+            {
+                return command.OriginalCommand.CanExecute(parameter);
+            }
+            catch (Exception)
+            {
+                if (IgnoreExceptionsFromCommands)
+                    return false;
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Execute command from execution group.
+        /// </summary>
+        /// <param name="command">Execution group command.</param>
+        /// <param name="parameter">Command parameter.</param>
+        async void ExecuteCommandFromExecutionGroup<TParameter>(ExecutionGroupCommand<TParameter> command, TParameter parameter)
+        {
+            if (VerifyCanExecuteBeforeExecution)
+            {
+                if (!command.OriginalCommand.CanExecute(parameter))
+                    return;
+            }
+
+            try
+            {
+                LockExecutionGroup(command.ExecutionGroup);
+
+                await command.OriginalCommand
+                    .ExecuteAsync(parameter)
+                    .ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception)
+            {
+                if (IgnoreExceptionsFromCommands)
+                    return;
+
+                throw;
+            }
+            finally
+            {
+                UnlockExecutionGroup(command.ExecutionGroup);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Execution group.
@@ -207,7 +357,7 @@ namespace FluentCommands
             /// </summary>
             /// <param name="command">Command to register.</param>
             /// <returns>Registered command.</returns>
-            public ICommand Register<TParameter>(IFluentCommand<TParameter> command)
+            public ICommand<TParameter> Register<TParameter>(IFluentCommand<TParameter> command)
             {
                 var executionGroupCommand = new ExecutionGroupCommand<TParameter>(
                     commandManager: commandManager,
@@ -215,7 +365,7 @@ namespace FluentCommands
                     originalCommand: command);
 
                 Commands.Add(executionGroupCommand);
-                return (executionGroupCommand);
+                return executionGroupCommand;
             }
         }
 
@@ -236,8 +386,16 @@ namespace FluentCommands
         class ExecutionGroupCommand : ICanExecuteChangedCommand
         {
             readonly FluentCommandManager commandManager;
-            readonly ExecutionGroup executionGroup;
-            readonly IFluentCommand originalCommand;
+
+            /// <summary>
+            /// Execution group.
+            /// </summary>
+            public ExecutionGroup ExecutionGroup { get; }
+            
+            /// <summary>
+            /// Original command.
+            /// </summary>
+            public IFluentCommand OriginalCommand { get; }
 
             /// <summary>
             /// Constructor.
@@ -248,10 +406,10 @@ namespace FluentCommands
                 IFluentCommand originalCommand)
             {
                 this.commandManager = commandManager;
-                this.executionGroup = executionGroup;
-                this.originalCommand = originalCommand;
+                ExecutionGroup = executionGroup;
+                OriginalCommand = originalCommand;
 
-                this.originalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
+                OriginalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
             }
 
             /// <summary>
@@ -277,66 +435,42 @@ namespace FluentCommands
                 }
             }
 
+            /// <summary>
+            /// Can execute.
+            /// </summary>
+            /// <param name="parameter">Command parameter.</param>
+            /// <returns>True, if command can execute; false otherwise.</returns>
             public bool CanExecute(object parameter)
             {
-                // Check if execution group allows the command to execute.
-                if (executionGroup.LockedCounter > 0)
-                    return false;
-
-                // Check if we should ignore the individual can execute method.
-                if (commandManager.IgnoreIndividualCanExecute)
-                    return true;
-
-                try
-                {
-                    return originalCommand.CanExecute(parameter);
-                }
-                catch (Exception)
-                {
-                    // If an exception is thrown, and we should ignore it,
-                    // then we will simply say the command shall not be called.
-                    if (commandManager.IgnoreExceptionsFromCommands)
-                        return false;
-
-                    throw;
-                }
+                return commandManager.CanExecuteCommandFromExecutionGroup(this, parameter);
             }
 
-            public async void Execute(object parameter)
+            /// <summary>
+            /// Execute command.
+            /// </summary>
+            /// <param name="parameter">Command parameter.</param>
+            public void Execute(object parameter)
             {
-                if (commandManager.VerifyCanExecuteBeforeExecution)
-                {
-                    if (!CanExecute(parameter))
-                        return;
-                }
-
-                try
-                {
-                    commandManager.LockExecutionGroup(executionGroup);
-                    await originalCommand.ExecuteAsync(parameter).ConfigureAwait(commandManager.ContinueOnCapturedContext);
-                }
-                catch (Exception)
-                {
-                    if (commandManager.IgnoreExceptionsFromCommands)
-                        return;
-
-                    throw;
-                }
-                finally
-                {
-                    commandManager.UnlockExecutionGroup(executionGroup);
-                }
+                commandManager.ExecuteCommandFromExecutionGroup(this, parameter);
             }
         }
 
         /// <summary>
         /// Execution group command (generic).
         /// </summary>
-        class ExecutionGroupCommand<TParameter> : ICanExecuteChangedCommand
+        class ExecutionGroupCommand<TParameter> : ICanExecuteChangedCommand, ICommand<TParameter>
         {
             readonly FluentCommandManager commandManager;
-            readonly ExecutionGroup executionGroup;
-            readonly IFluentCommand<TParameter> originalCommand;
+
+            /// <summary>
+            /// Execution group.
+            /// </summary>
+            public ExecutionGroup ExecutionGroup { get; }
+
+            /// <summary>
+            /// Original command.
+            /// </summary>
+            public IFluentCommand<TParameter> OriginalCommand { get; }
 
             /// <summary>
             /// Constructor.
@@ -347,10 +481,10 @@ namespace FluentCommands
                 IFluentCommand<TParameter> originalCommand)
             {
                 this.commandManager = commandManager;
-                this.executionGroup = executionGroup;
-                this.originalCommand = originalCommand;
+                ExecutionGroup = executionGroup;
+                OriginalCommand = originalCommand;
 
-                this.originalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
+                OriginalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
             }
 
             /// <summary>
@@ -376,65 +510,42 @@ namespace FluentCommands
                 }
             }
 
+            /// <summary>
+            /// Can execute.
+            /// </summary>
+            /// <param name="parameter">Command parameter.</param>
+            /// <returns>True, if command can exeucte; false otherwise.</returns>
             public bool CanExecute(object parameter)
             {
                 return CanExecute((TParameter)parameter);
             }
 
+            /// <summary>
+            /// Can execute.
+            /// </summary>
+            /// <param name="parameter">Command parameter.</param>
+            /// <returns>True, if command can exeucte; false otherwise.</returns>
             public bool CanExecute(TParameter parameter)
             {
-                // Check if execution group allows the command to execute.
-                if (executionGroup.LockedCounter > 0)
-                    return false;
-
-                // Check if we should ignore the individual can execute method.
-                if (commandManager.IgnoreIndividualCanExecute)
-                    return true;
-
-                try
-                {
-                    return originalCommand.CanExecute(parameter);
-                }
-                catch (Exception)
-                {
-                    // If an exception is thrown, and we should ignore it,
-                    // then we will simply say the command shall not be called.
-                    if (commandManager.IgnoreExceptionsFromCommands)
-                        return false;
-
-                    throw;
-                }
+                return commandManager.CanExecuteCommandFromExecutionGroup(this, parameter);
             }
 
+            /// <summary>
+            /// Execute command.
+            /// </summary>
+            /// <param name="parameter">Command parameter.</param>
             public void Execute(object parameter)
             {
                 Execute((TParameter)parameter);
             }
 
-            public async void Execute(TParameter parameter)
+            /// <summary>
+            /// Execute command.
+            /// </summary>
+            /// <param name="parameter">Command parameter.</param>
+            public void Execute(TParameter parameter)
             {
-                if (commandManager.VerifyCanExecuteBeforeExecution)
-                {
-                    if (!CanExecute(parameter))
-                        return;
-                }
-
-                try
-                {
-                    commandManager.LockExecutionGroup(executionGroup);
-                    await originalCommand.ExecuteAsync(parameter).ConfigureAwait(commandManager.ContinueOnCapturedContext);
-                }
-                catch (Exception)
-                {
-                    if (commandManager.IgnoreExceptionsFromCommands)
-                        return;
-
-                    throw;
-                }
-                finally
-                {
-                    commandManager.UnlockExecutionGroup(executionGroup);
-                }
+                commandManager.ExecuteCommandFromExecutionGroup(this, parameter);
             }
         }
 

@@ -19,6 +19,6 @@ namespace FluentCommands
         /// </summary>
         /// <param name="command">Command to register.</param>
         /// <returns>Registered command.</returns>
-        ICommand Register<TParameter>(IFluentCommand<TParameter> command);
+        ICommand<TParameter> Register<TParameter>(IFluentCommand<TParameter> command);
     }
 }

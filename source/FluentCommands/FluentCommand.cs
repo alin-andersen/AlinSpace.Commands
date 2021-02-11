@@ -76,7 +76,10 @@ namespace FluentCommands
         /// <returns>True if can execute; false otherwise.</returns>
         public bool CanExecute(object parameter = null)
         {
-            return canExecuteFunc?.Invoke(parameter) ?? true;
+            if (canExecuteFunc == null)
+                return true;
+
+            return canExecuteFunc(parameter);
         }
 
         /// <summary>
@@ -172,7 +175,10 @@ namespace FluentCommands
         /// <returns>True, if command can be executed; false otherwise.</returns>
         public bool CanExecute(TParameter parameter = default)
         {
-            return canExecuteFunc?.Invoke(parameter) ?? true;
+            if (canExecuteFunc == null)
+                return true;
+
+            return canExecuteFunc(parameter);
         }
 
         /// <summary>

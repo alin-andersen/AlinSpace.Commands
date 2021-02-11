@@ -13,7 +13,7 @@ namespace FluentCommands
         /// </summary>
         /// <typeparam name="T">Type.</typeparam>
         /// <param name="action">Action to call for each element.</param>
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        internal static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
             foreach(var element in enumerable)
             {
