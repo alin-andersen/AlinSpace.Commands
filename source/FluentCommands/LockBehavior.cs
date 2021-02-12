@@ -13,11 +13,16 @@
         /// <summary>
         /// Lock all other groups.
         /// </summary>
-        LockAllOthersGroups,
+        LockAllOtherGroups,
 
         /// <summary>
         /// Lock this group.
         /// </summary>
         LockThisGroup,
+
+        /// <summary>
+        /// Lock nothing.
+        /// </summary>
+        LockNothing,
     }
 }

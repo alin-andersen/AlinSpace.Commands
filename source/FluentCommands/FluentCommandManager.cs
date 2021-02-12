@@ -11,24 +11,9 @@ namespace FluentCommands
     public class FluentCommandManager : IFluentCommandManager
     {
         /// <summary>
-        /// Verify CanExecute allows execution before invoking a command.
+        /// Settings.
         /// </summary>
-        public bool VerifyCanExecuteBeforeExecution { get; }
-
-        /// <summary>
-        /// Ignore CanExecute of all commands.
-        /// </summary>
-        public bool IgnoreIndividualCanExecute { get; }
-
-        /// <summary>
-        /// Ignore exceptions thrown from commands.
-        /// </summary>
-        public bool IgnoreExceptionsFromCommands { get; }
-
-        /// <summary>
-        /// Continue on captured context.
-        /// </summary>
-        public bool ContinueOnCapturedContext { get; }
+        readonly FluentCommandManagerSettings settings = new FluentCommandManagerSettings();
 
         /// <summary>
         /// Execution groups.
@@ -38,41 +23,20 @@ namespace FluentCommands
         /// <summary>
         /// Create command manager.
         /// </summary>
-        /// <param name="verifyCanExecuteBeforeExecution"></param>
-        /// <param name="ignoreIndividualCanExecute"></param>
-        /// <param name="ignoreExceptionsFromCommands"></param>
-        /// <param name="continueOnCapturedContext"></param>
-        /// <returns>Command manager.</returns>
-        public static FluentCommandManager New(
-            bool verifyCanExecuteBeforeExecution = false,
-            bool ignoreIndividualCanExecute = false,
-            bool ignoreExceptionsFromCommands = true,
-            bool continueOnCapturedContext = true)
+        /// <param name="settingsCallback">Optional settings callback.</param>
+        /// <returns>Fluent command manager.</returns>
+        public static FluentCommandManager New(Action<IFluentCommandManagerSettings> settingsCallback = null)
         {
-            return new FluentCommandManager(
-                verifyCanExecuteBeforeExecution, 
-                ignoreIndividualCanExecute,
-                ignoreExceptionsFromCommands,
-                continueOnCapturedContext);
+            return new FluentCommandManager(settingsCallback);
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="verifyCanExecuteBeforeExecution"></param>
-        /// <param name="ignoreIndividualCanExecute"></param>
-        /// <param name="ignoreExceptionsFromCommands"></param>
-        /// <param name="continueOnCapturedContext"></param>
-        public FluentCommandManager(
-            bool verifyCanExecuteBeforeExecution = false, 
-            bool ignoreIndividualCanExecute = false,
-            bool ignoreExceptionsFromCommands = true,
-            bool continueOnCapturedContext = true)
+        /// <param name="settingsCallback">Optional settings callback.</param>
+        public FluentCommandManager(Action<IFluentCommandManagerSettings> settingsCallback = null)
         {
-            VerifyCanExecuteBeforeExecution = verifyCanExecuteBeforeExecution;
-            IgnoreIndividualCanExecute = ignoreIndividualCanExecute;
-            IgnoreExceptionsFromCommands = ignoreExceptionsFromCommands;
-            ContinueOnCapturedContext = continueOnCapturedContext;
+            settingsCallback?.Invoke(settings);
         }
 
         /// <summary>
@@ -96,14 +60,43 @@ namespace FluentCommands
         #region Internal
 
         /// <summary>
+        /// Default value for <see cref="IFluentCommandManagerSettings"/>.
+        /// </summary>
+        class FluentCommandManagerSettings : IFluentCommandManagerSettings
+        {
+            /// <summary>
+            /// Verify CanExecute allows execution before invoking a command.
+            /// </summary>
+            public bool VerifyCanExecuteBeforeExecution { get; set; }
+
+            /// <summary>
+            /// Ignore CanExecute of all commands.
+            /// </summary>
+            public bool IgnoreIndividualCanExecute { get; set; }
+
+            /// <summary>
+            /// Ignore exceptions thrown from commands.
+            /// </summary>
+            public bool IgnoreExceptionsFromCommands { get; set; }
+
+            /// <summary>
+            /// Continue on captured context.
+            /// </summary>
+            public bool ContinueOnCapturedContext { get; set; } = true;
+        }
+
+        /// <summary>
         /// Get execution groups to lock for the given execution group.
         /// </summary>
         /// <param name="executionGroup">Execition group.</param>
         /// <returns>Enumerable of execution groups that shall be locked.</returns>
         IEnumerable<ExecutionGroup> GetExecutionGroupsToLock(ExecutionGroup executionGroup)
         {
+            if (executionGroup.Lock == LockBehavior.LockNothing)
+                return new ExecutionGroup[] { };
+
             if (executionGroup.Lock == LockBehavior.LockThisGroup)
-                return new[] { executionGroup };
+                return new ExecutionGroup[] { executionGroup };
 
             IList<ExecutionGroup> executionGroupsToLock = new List<ExecutionGroup>();
 
@@ -111,7 +104,7 @@ namespace FluentCommands
             {
                 if (ReferenceEquals(ex, executionGroup))
                 {
-                    if (executionGroup.Lock == LockBehavior.LockAllOthersGroups)
+                    if (executionGroup.Lock == LockBehavior.LockAllOtherGroups)
                         continue;
                 }
                 
@@ -163,7 +156,7 @@ namespace FluentCommands
                 }
                 catch(Exception)
                 {
-                    if (IgnoreExceptionsFromCommands)
+                    if (settings.IgnoreExceptionsFromCommands)
                         return;
 
                     throw;
@@ -186,7 +179,7 @@ namespace FluentCommands
                 return false;
 
             // Check if we should ignore the individual can execute method.
-            if (IgnoreIndividualCanExecute)
+            if (settings.IgnoreIndividualCanExecute)
                 return true;
 
             try
@@ -197,7 +190,7 @@ namespace FluentCommands
             {
                 // If an exception is thrown, and we should ignore it,
                 // then we will simply say the command shall not be called.
-                if (IgnoreExceptionsFromCommands)
+                if (settings.IgnoreExceptionsFromCommands)
                     return false;
 
                 throw;
@@ -211,7 +204,7 @@ namespace FluentCommands
         /// <param name="parameter">Command parameter.</param>
         async void ExecuteCommandFromExecutionGroup(ExecutionGroupCommand command, object parameter)
         {
-            if (VerifyCanExecuteBeforeExecution)
+            if (settings.VerifyCanExecuteBeforeExecution)
             {
                 if (!command.OriginalCommand.CanExecute(parameter))
                     return;
@@ -223,11 +216,11 @@ namespace FluentCommands
                 
                 await command.OriginalCommand
                     .ExecuteAsync(parameter)
-                    .ConfigureAwait(ContinueOnCapturedContext);
+                    .ConfigureAwait(settings.ContinueOnCapturedContext);
             }
             catch (Exception)
             {
-                if (IgnoreExceptionsFromCommands)
+                if (settings.IgnoreExceptionsFromCommands)
                     return;
 
                 throw;
@@ -253,7 +246,7 @@ namespace FluentCommands
             if (command.ExecutionGroup.LockedCounter > 0)
                 return false;
 
-            if (IgnoreIndividualCanExecute)
+            if (settings.IgnoreIndividualCanExecute)
                 return true;
 
             try
@@ -262,7 +255,7 @@ namespace FluentCommands
             }
             catch (Exception)
             {
-                if (IgnoreExceptionsFromCommands)
+                if (settings.IgnoreExceptionsFromCommands)
                     return false;
 
                 throw;
@@ -276,7 +269,7 @@ namespace FluentCommands
         /// <param name="parameter">Command parameter.</param>
         async void ExecuteCommandFromExecutionGroup<TParameter>(ExecutionGroupCommand<TParameter> command, TParameter parameter)
         {
-            if (VerifyCanExecuteBeforeExecution)
+            if (settings.VerifyCanExecuteBeforeExecution)
             {
                 if (!command.OriginalCommand.CanExecute(parameter))
                     return;
@@ -288,11 +281,11 @@ namespace FluentCommands
 
                 await command.OriginalCommand
                     .ExecuteAsync(parameter)
-                    .ConfigureAwait(ContinueOnCapturedContext);
+                    .ConfigureAwait(settings.ContinueOnCapturedContext);
             }
             catch (Exception)
             {
-                if (IgnoreExceptionsFromCommands)
+                if (settings.IgnoreExceptionsFromCommands)
                     return;
 
                 throw;
@@ -428,7 +421,7 @@ namespace FluentCommands
                 }
                 catch (Exception)
                 {
-                    if (commandManager.IgnoreExceptionsFromCommands)
+                    if (commandManager.settings.IgnoreExceptionsFromCommands)
                         return;
 
                     throw;
@@ -503,7 +496,7 @@ namespace FluentCommands
                 }
                 catch (Exception)
                 {
-                    if (commandManager.IgnoreExceptionsFromCommands)
+                    if (commandManager.settings.IgnoreExceptionsFromCommands)
                         return;
 
                     throw;

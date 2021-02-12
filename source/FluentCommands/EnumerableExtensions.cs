@@ -6,7 +6,7 @@ namespace FluentCommands
     /// <summary>
     /// Extensions for <see cref="IEnumerable{T}"/>.
     /// </summary>
-    public static class EnumerableExtensions
+    internal static class EnumerableExtensions
     {
         /// <summary>
         /// Call given action for each element.
