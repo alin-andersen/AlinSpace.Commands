@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentCommands", "FluentCommands\FluentCommands.csproj", "{2234AC11-8ADE-4347-893B-66DA70EB367C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlinSpace.FluentCommands", "AlinSpace.FluentCommands\AlinSpace.FluentCommands.csproj", "{2234AC11-8ADE-4347-893B-66DA70EB367C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentCommands.Tests", "FluentCommands.Tests\FluentCommands.Tests.csproj", "{85A6B8C3-4FDB-46C2-AECA-11D4AE210693}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCommands.Unity", "FluentCommands.Unity\FluentCommands.Unity.csproj", "{4B8C29E9-0134-4311-87DF-EC2C1EAD971B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlinSpace.FluentCommands.Tests", "AlinSpace.FluentCommands.Tests\AlinSpace.FluentCommands.Tests.csproj", "{85A6B8C3-4FDB-46C2-AECA-11D4AE210693}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace FluentCommands
+namespace AlinSpace.FluentCommands
 {
     /// <summary>
     /// Fluent command interface.

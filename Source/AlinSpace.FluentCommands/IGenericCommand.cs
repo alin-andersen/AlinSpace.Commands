@@ -1,4 +1,4 @@
-﻿namespace FluentCommands
+﻿namespace AlinSpace.FluentCommands
 {
     /// <summary>
     /// Generic version of <see cref="System.Windows.Input.ICommand"/>.

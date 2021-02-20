@@ -5,20 +5,20 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>fluent, fluent commands, commands, command manager</PackageTags>
+    <PackageTags>fluent, fluent commands, command, commands, command manager</PackageTags>
     <PackageProjectUrl>https://github.com/onixion/FluentCommands</PackageProjectUrl>
     <Copyright>Copyright © 2021 Alin Andersen</Copyright>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/onixion/FluentCommands</RepositoryUrl>
-    <PackageId>FluentCommandsNet</PackageId>
+    <PackageId>AlinSpace.FluentCommands</PackageId>
     <Authors>Alin Andersen</Authors>
-    <Product>FluentCommandsNet</Product>
-    <Description>Fluent Command and Command Manager.</Description>
-    <AssemblyVersion>1.6.1.0</AssemblyVersion>
-    <FileVersion>1.6.1.0</FileVersion>
-    <Version>1.6.1</Version>
+    <Product>AlinSpace.FluentCommands</Product>
+    <Description>Fluent commands and command manager.</Description>
+    <AssemblyVersion>1.7.1.0</AssemblyVersion>
+    <FileVersion>1.7.1.0</FileVersion>
+    <Version>1.7.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

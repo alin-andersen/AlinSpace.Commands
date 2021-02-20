@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xunit;
 
-namespace FluentCommands.Tests
+namespace AlinSpace.FluentCommands.Tests
 {
     /// <summary>
     /// Tests for <see cref="FluentCommandManager"/>.

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace FluentCommands
+namespace AlinSpace.FluentCommands
 {
     /// <summary>
     /// Execution group interface.

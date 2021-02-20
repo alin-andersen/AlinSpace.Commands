@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FluentCommands
+namespace AlinSpace.FluentCommands
 {
     /// <summary>
     /// Extensions for <see cref="IFluentCommandManager"/>.

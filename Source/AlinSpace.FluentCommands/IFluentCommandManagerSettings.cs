@@ -1,4 +1,4 @@
-﻿namespace FluentCommands
+﻿namespace AlinSpace.FluentCommands
 {
     /// <summary>
     /// Settings for <see cref="IFluentCommandManager"/>.

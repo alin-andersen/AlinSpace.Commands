@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 
-namespace FluentCommands.Tests
+namespace AlinSpace.FluentCommands.Tests
 {
     /// <summary>
     /// Tests for <see cref="FluentCommand"/> and <see cref="FluentCommand{TParameter}"/>.
