@@ -1,11 +1,14 @@
-# ![Icon](assets/Icon.png)
+<img src="https://github.com/onixion/FluentCommands/blob/main/Assets/Icon.png" width="200" height="200">
+
 # FluentCommands
-[![NuGet version (FluentCommands)](https://img.shields.io/nuget/v/FluentCommandsNet.svg?style=flat-square)](https://www.nuget.org/packages/FluentCommandsNet/)
+[![NuGet version (FluentCommands)](https://img.shields.io/nuget/v/AlinSpace.FluentCommands.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.FluentCommands/)
 
 A simple fluent library for command and command manager patterns.
 
 The *IFluentCommand* interface is very similar to the *ICommand* interface, but they are **not** the same.
 The fluent interface is a fully asynchronous command interface, whereas *ICommand* is **not**.
+
+[NuGet package](https://www.nuget.org/packages/AlinSpace.FluentCommands/)
 
 # Examples - FluentCommand
 
