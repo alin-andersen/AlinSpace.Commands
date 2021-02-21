@@ -54,6 +54,7 @@ public class MyGenericFluentCommand<int> : AbstractFluentCommand
 ```
 
 # Examples - FluentCommandManager
+
 The *FluentCommandManager* allows to create *execution groups*. 
 Execution groups dictate the availability of command execution.
 Fluent commands are registered to one execution group.
@@ -73,7 +74,7 @@ FluentCommandManager
        DeleteCommand = e.Register(DeleteFluentCommand);
     });
       
-# Same configuration as above
+// Same configuration as above.
 FluentCommandManager
   .New()
   .AddGroup(executionGroup => 
@@ -82,7 +83,7 @@ FluentCommandManager
      DeleteCommand = executionGroup.Register(DeleteFluentCommand);
   });
         
-# Same configuration as above
+// Same configuration as above.
 FluentCommandManager
   .New()
   .AddGroup(
@@ -128,14 +129,8 @@ The *Block20Command* will do 20 seconds of work.
 ```csharp
 FluentCommandManager
     .New()
-    .LockThis(eg => 
-    {
-       Block10Command = eg.Register(Block10Command);
-    })
-    .LockAll(eg => 
-    {
-       Block20Command = eg.Register(Block20Command);
-    });
+    .LockThis(eg => Block10Command = eg.Register(Block10Command))
+    .LockAll(eg => Block20Command = eg.Register(Block20Command));
 ```
 
 When you press the *Block10Command* the command manager will lock the *Block10Command* for 10 seconds.
