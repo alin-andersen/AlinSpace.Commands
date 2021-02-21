@@ -73,26 +73,6 @@ FluentCommandManager
        SaveCommand = e.Register(SaveFluentCommand);
        DeleteCommand = e.Register(DeleteFluentCommand);
     });
-      
-// Same configuration as above.
-FluentCommandManager
-  .New()
-  .AddGroup(executionGroup => 
-  {
-     SaveCommand = executionGroup.Register(SaveFluentCommand);
-     DeleteCommand = executionGroup.Register(DeleteFluentCommand);
-  });
-        
-// Same configuration as above.
-FluentCommandManager
-  .New()
-  .AddGroup(
-      executionGroup => 
-      {
-        SaveCommand = executionGroup.Register(SaveFluentCommand);
-        DeleteCommand = executionGroup.Register(DeleteFluentCommand);
-      },
-      LockBehavior.LockAllGroups);
 ```
 
 Each execution group defines a lock behavior. This behavior defines how the execution group will affect other execution groups when it gets locked.
