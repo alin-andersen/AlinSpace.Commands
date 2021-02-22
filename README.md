@@ -1,4 +1,4 @@
-<img src="https://github.com/onixion/FluentCommands/blob/main/Assets/Icon.png" width="200" height="200">
+<img src="https://github.com/onixion/FluentCommands/blob/main/Assets/Icon.jpg" width="200" height="200">
 
 # FluentCommands
 [![NuGet version (FluentCommands)](https://img.shields.io/nuget/v/AlinSpace.FluentCommands.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.FluentCommands/)
