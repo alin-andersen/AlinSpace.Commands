@@ -115,5 +115,5 @@ FluentCommandManager
 
 When you press the *Block10Command* the command manager will lock the *Block10Command* for 10 seconds.
 If you wait 5 seconds and then execute the *Block20Command* command, all commands will be locked for another 20 seconds.
-After waiting for 5 seconds the *Block10Command* will be done and unlock its execution group, but because the other command group still blocks all groups for another 15 seconds, *Block10Command* will stay blocked for 15 seconds.
+After waiting for 5 seconds the *Block10Command* will be done and unlock its group, but because the other command group still blocks all groups for another 15 seconds, *Block10Command* will stay blocked for 15 seconds.
 *Block10Command* and *Block20Command* will both be unlocked at the same time.
