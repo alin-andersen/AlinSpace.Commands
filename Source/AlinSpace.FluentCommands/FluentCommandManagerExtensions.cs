@@ -13,9 +13,9 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockAll(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
+        public static IFluentCommandManager LockAll(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
         {
-            return commandManager.AddGroup(executionGroupCallback, LockBehavior.LockAllGroups);
+            return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockAllGroups);
         }
 
         /// <summary>
@@ -24,9 +24,9 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockOthers(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
+        public static IFluentCommandManager LockOthers(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
         {
-            return commandManager.AddGroup(executionGroupCallback, LockBehavior.LockAllOtherGroups);
+            return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockAllOtherGroups);
         }
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockThis(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
+        public static IFluentCommandManager LockThis(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
         {
-            return commandManager.AddGroup(executionGroupCallback, LockBehavior.LockThisGroup);
+            return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockThisGroup);
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockNothing(this IFluentCommandManager commandManager, Action<IExecutionGroup> executionGroupCallback)
+        public static IFluentCommandManager LockNothing(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
         {
-            return commandManager.AddGroup(executionGroupCallback, LockBehavior.LockNothing);
+            return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockNothing);
         }
     }
 }

@@ -13,6 +13,6 @@ namespace AlinSpace.FluentCommands
         /// <param name="exectionGroupCallback">Execution group callback.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, LockBehavior @lock = LockBehavior.LockAllGroups);
+        IFluentCommandManager AddGroup(Action<ICommandGroup> exectionGroupCallback, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups);
     }
 }

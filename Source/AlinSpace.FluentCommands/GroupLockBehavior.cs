@@ -1,9 +1,12 @@
 ﻿namespace AlinSpace.FluentCommands
 {
     /// <summary>
-    /// Execution behaviour.
+    /// Group lock behaviour.
     /// </summary>
-    public enum LockBehavior
+    /// <remarks>
+    /// The locking behavior when a command of this group is executed.
+    /// </remarks>
+    public enum GroupLockBehavior
     {
         /// <summary>
         /// Lock all groups.

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIcon>Icon.png</PackageIcon>
+    <PackageIcon>Icon.jpg</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <PackageTags>fluent, fluent commands, command, commands, command manager</PackageTags>
     <PackageProjectUrl>https://github.com/onixion/FluentCommands</PackageProjectUrl>
@@ -16,13 +16,13 @@
     <Authors>Alin Andersen</Authors>
     <Product>AlinSpace.FluentCommands</Product>
     <Description>Fluent commands and command manager.</Description>
-    <AssemblyVersion>1.7.1.0</AssemblyVersion>
-    <FileVersion>1.7.1.0</FileVersion>
-    <Version>1.7.1</Version>
+    <AssemblyVersion>1.8.2.0</AssemblyVersion>
+    <FileVersion>1.8.2.0</FileVersion>
+    <Version>1.8.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\assets\Icon.png">
+    <None Include="..\..\..\FluentArguments\Source\AlinSpace.FluentArguments\Icon.jpg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

@@ -45,7 +45,7 @@ namespace AlinSpace.FluentCommands
         /// <param name="exectionGroupCallback">Execution group callback.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        public IFluentCommandManager AddGroup(Action<IExecutionGroup> exectionGroupCallback, LockBehavior @lock = LockBehavior.LockAllGroups)
+        public IFluentCommandManager AddGroup(Action<ICommandGroup> exectionGroupCallback, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups)
         {
             var executionGroup = new ExecutionGroup(
                 commandManager: this,
@@ -92,10 +92,10 @@ namespace AlinSpace.FluentCommands
         /// <returns>Enumerable of execution groups that shall be locked.</returns>
         IEnumerable<ExecutionGroup> GetExecutionGroupsToLock(ExecutionGroup executionGroup)
         {
-            if (executionGroup.Lock == LockBehavior.LockNothing)
+            if (executionGroup.Lock == GroupLockBehavior.LockNothing)
                 return new ExecutionGroup[] { };
 
-            if (executionGroup.Lock == LockBehavior.LockThisGroup)
+            if (executionGroup.Lock == GroupLockBehavior.LockThisGroup)
                 return new ExecutionGroup[] { executionGroup };
 
             IList<ExecutionGroup> executionGroupsToLock = new List<ExecutionGroup>();
@@ -104,7 +104,7 @@ namespace AlinSpace.FluentCommands
             {
                 if (ReferenceEquals(ex, executionGroup))
                 {
-                    if (executionGroup.Lock == LockBehavior.LockAllOtherGroups)
+                    if (executionGroup.Lock == GroupLockBehavior.LockAllOtherGroups)
                         continue;
                 }
                 
@@ -301,14 +301,14 @@ namespace AlinSpace.FluentCommands
         /// <summary>
         /// Execution group.
         /// </summary>
-        class ExecutionGroup : IExecutionGroup
+        class ExecutionGroup : ICommandGroup
         {
             readonly FluentCommandManager commandManager;
 
             /// <summary>
             /// Execution lock.
             /// </summary>
-            public LockBehavior Lock { get; }
+            public GroupLockBehavior Lock { get; }
 
             /// <summary>
             /// Is locked.
@@ -323,7 +323,7 @@ namespace AlinSpace.FluentCommands
             /// <summary>
             /// Constructor.
             /// </summary>
-            public ExecutionGroup(FluentCommandManager commandManager, LockBehavior @lock)
+            public ExecutionGroup(FluentCommandManager commandManager, GroupLockBehavior @lock)
             {
                 this.commandManager = commandManager;
                 Lock = @lock;

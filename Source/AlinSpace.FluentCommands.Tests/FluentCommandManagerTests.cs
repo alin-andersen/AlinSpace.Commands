@@ -17,7 +17,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// <remarks>
         /// This test will create the following configuration:
         /// 
-        ///     - ExecutionGroup A with <see cref="LockBehavior.LockAllGroups"/>
+        ///     - ExecutionGroup A with <see cref="GroupLockBehavior.LockAllGroups"/>
         ///         - Command A
         ///         
         /// Command A will be executed.
@@ -62,7 +62,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// <remarks>
         /// This test will create the following configuration:
         /// 
-        ///     - ExecutionGroup A with <see cref="LockBehavior.LockAllGroups"/>
+        ///     - ExecutionGroup A with <see cref="GroupLockBehavior.LockAllGroups"/>
         ///         - Command A
         ///         - Command B
         ///         
@@ -127,7 +127,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// <remarks>
         /// This test will create the following configuration:
         /// 
-        ///     - ExecutionGroup A with <see cref="LockBehavior.LockAllGroups"/>
+        ///     - ExecutionGroup A with <see cref="GroupLockBehavior.LockAllGroups"/>
         ///         - Command A
         ///     - ExecutionGroup B
         ///         - Command B
@@ -190,7 +190,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// <remarks>
         /// This test will create the following configuration:
         /// 
-        ///     - ExecutionGroup A with <see cref="LockBehavior.LockAllGroups"/>
+        ///     - ExecutionGroup A with <see cref="GroupLockBehavior.LockAllGroups"/>
         ///         - Command A
         ///     - ExecutionGroup B
         ///         - Command B
@@ -270,7 +270,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// <remarks>
         /// This test will create the following configuration:
         /// 
-        ///     - ExecutionGroup A with <see cref="LockBehavior.LockAllOtherGroups"/>
+        ///     - ExecutionGroup A with <see cref="GroupLockBehavior.LockAllOtherGroups"/>
         ///         - Command A
         ///     - ExecutionGroup B
         ///         - Command B
@@ -320,7 +320,7 @@ namespace AlinSpace.FluentCommands.Tests
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),
-                    LockBehavior.LockAllOtherGroups)
+                    GroupLockBehavior.LockAllOtherGroups)
                 .AddGroup(eg => commandB = eg.Register(commandMockB.Object))
                 .AddGroup(eg => commandC = eg.Register(commandMockC.Object));
 
@@ -354,7 +354,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// <remarks>
         /// This test will create the following configuration:
         /// 
-        ///     - ExecutionGroup A with <see cref="LockBehavior.LockThisGroup"/>
+        ///     - ExecutionGroup A with <see cref="GroupLockBehavior.LockThisGroup"/>
         ///         - Command A
         ///     - ExecutionGroup B
         ///         - Command B
@@ -404,7 +404,7 @@ namespace AlinSpace.FluentCommands.Tests
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),
-                    LockBehavior.LockAllOtherGroups)
+                    GroupLockBehavior.LockAllOtherGroups)
                 .AddGroup(eg => commandB = eg.Register(commandMockB.Object))
                 .AddGroup(eg => commandC = eg.Register(commandMockC.Object));
 
@@ -438,7 +438,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// <remarks>
         /// This test will create the following configuration:
         /// 
-        ///     - ExecutionGroup A with <see cref="LockBehavior.LockNothing"/>
+        ///     - ExecutionGroup A with <see cref="GroupLockBehavior.LockNothing"/>
         ///         - Command A
         ///     - ExecutionGroup B
         ///         - Command B
@@ -487,7 +487,7 @@ namespace AlinSpace.FluentCommands.Tests
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),
-                    LockBehavior.LockNothing)
+                    GroupLockBehavior.LockNothing)
                 .AddGroup(eg => commandB = eg.Register(commandMockB.Object))
                 .AddGroup(eg => commandC = eg.Register(commandMockC.Object));
 
