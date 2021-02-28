@@ -10,7 +10,7 @@ The fluent interface is a fully asynchronous command interface, whereas *IComman
 
 [NuGet package](https://www.nuget.org/packages/AlinSpace.FluentCommands/)
 
-# Examples - FluentCommand
+## Examples - FluentCommand
 
 This is the *FluentCommand*:
 
@@ -27,7 +27,7 @@ var genericFluentCommand = FluentCommand
     
 ```
 
-# Examples - AbstractFluentCommand
+## Examples - AbstractFluentCommand
 
 This is the *AbstractFluentCommand*:
 
@@ -53,7 +53,7 @@ public class MyGenericFluentCommand<int> : AbstractFluentCommand
 }
 ```
 
-# Examples - FluentCommandManager
+## Examples - FluentCommandManager
 
 The *FluentCommandManager* allows to create *command groups*. 
 Command groups dictate the availability of command execution.
