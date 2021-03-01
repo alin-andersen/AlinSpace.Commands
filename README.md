@@ -10,7 +10,7 @@ The fluent interface is a fully asynchronous command interface, whereas *IComman
 
 [NuGet package](https://www.nuget.org/packages/AlinSpace.FluentCommands/)
 
-# Examples - FluentCommand
+## Examples - FluentCommand
 
 This is the *FluentCommand*:
 
@@ -27,7 +27,7 @@ var genericFluentCommand = FluentCommand
     
 ```
 
-# Examples - AbstractFluentCommand
+## Examples - AbstractFluentCommand
 
 This is the *AbstractFluentCommand*:
 
@@ -53,12 +53,12 @@ public class MyGenericFluentCommand<int> : AbstractFluentCommand
 }
 ```
 
-# Examples - FluentCommandManager
+## Examples - FluentCommandManager
 
-The *FluentCommandManager* allows to create *execution groups*. 
-Execution groups dictate the availability of command execution.
-Fluent commands are registered to one execution group.
-When registering a *FluentCommand* to an execution group, it will return an *ICommand* instance.
+The *FluentCommandManager* allows to create *command groups*. 
+Command groups dictate the availability of command execution.
+Fluent commands are registered to one command group.
+When registering a *FluentCommand* to a group, it will return an *ICommand* instance.
 This instance can be passed to the view that consumes the command.
 The command manager will hide all the logic for locking, unlocking, and notifying commands for you.
 Additionally, each registered fluent command can also add instance-specific logic for CanExecute.
@@ -75,11 +75,11 @@ FluentCommandManager
     });
 ```
 
-Each execution group defines a lock behavior. This behavior defines how the execution group will affect other execution groups when it gets locked.
-On default the execution group lock is set to *LockAllGroups*, meaning all execution groups will be locked when a command is executed from the group.
-When an execution group is locked by at least one execution group, all commands registered to this group will not be able to execute until released by all execution groups.
+Each command group defines a group lock behavior. This behavior defines how the group will affect other groups when it gets locked.
+On default the command group lock is set to *LockAllGroups*, meaning all groups will be locked when a command is executed from this group.
+When an group is locked by at least one group, all commands registered to this group will not be able to execute until released by all groups.
 
-These are the currently supported execution lock behaviors:
+These are the currently supported group lock behaviors:
  * *LockAllGroups*: Locks all groups when executing a command registered to this group.
  * *LockOtherGroups*: Locks all other groups when executing a command registered to this group.
  * *LockThisGroup*: Locks this group when executing a command registered to this group.
@@ -115,5 +115,5 @@ FluentCommandManager
 
 When you press the *Block10Command* the command manager will lock the *Block10Command* for 10 seconds.
 If you wait 5 seconds and then execute the *Block20Command* command, all commands will be locked for another 20 seconds.
-After waiting for 5 seconds the *Block10Command* will be done and unlock its execution group, but because the other execution group still blocks all groups for another 15 seconds, *Block10Command* will stay blocked for 15 seconds.
+After waiting for 5 seconds the *Block10Command* will be done and unlock its group, but because the other command group still blocks all groups for another 15 seconds, *Block10Command* will stay blocked for 15 seconds.
 *Block10Command* and *Block20Command* will both be unlocked at the same time.
