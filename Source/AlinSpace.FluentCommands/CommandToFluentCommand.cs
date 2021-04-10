@@ -1,13 +1,26 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace AlinSpace.FluentCommands
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IFluentCommand"/>.
+    /// <see cref="ICommand"/> to <see cref="IFluentCommand"/>.
     /// </summary>
-    public abstract class AbstractFluentCommand : IFluentCommand
+    public class CommandToFluentCommand : IFluentCommand
     {
+        readonly ICommand command;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="command">Command.</param>
+        public CommandToFluentCommand(ICommand command)
+        {
+            this.command = command ?? throw new ArgumentNullException(nameof(command));
+            command.CanExecuteChanged += (sender, args) => CanExecuteChanged(sender, args);
+        }
+
         /// <summary>
         /// Can execute changed.
         /// </summary>
@@ -17,21 +30,13 @@ namespace AlinSpace.FluentCommands
         public event EventHandler CanExecuteChanged = delegate { };
 
         /// <summary>
-        /// Raises <see cref="CanExecuteChanged"/>.
-        /// </summary>
-        protected void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged(this, EventArgs.Empty);
-        }
-
-        /// <summary>
         /// Can command execute.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>True, if command can be executed; false otherwise.</returns>
-        public virtual bool CanExecute(object parameter = null)
+        public bool CanExecute(object parameter = null)
         {
-            return true;
+            return command.CanExecute(parameter);
         }
 
         /// <summary>
@@ -39,6 +44,10 @@ namespace AlinSpace.FluentCommands
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>Task.</returns>
-        public abstract Task ExecuteAsync(object parameter = null);
+        public Task ExecuteAsync(object parameter = null)
+        {
+            command.Execute(parameter);
+            return Task.CompletedTask;
+        }
     }
 }

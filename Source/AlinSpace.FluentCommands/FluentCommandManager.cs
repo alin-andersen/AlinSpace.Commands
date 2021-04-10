@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AlinSpace.FluentCommands
@@ -202,7 +203,8 @@ namespace AlinSpace.FluentCommands
         /// </summary>
         /// <param name="command">Execution group command.</param>
         /// <param name="parameter">Command parameter.</param>
-        async void ExecuteCommandFromExecutionGroup(ExecutionGroupCommand command, object parameter)
+        /// <returns>Task.</returns>
+        async Task ExecuteCommandFromExecutionGroupAsync(ExecutionGroupCommand command, object parameter)
         {
             if (settings.VerifyCanExecuteBeforeExecution)
             {
@@ -214,71 +216,6 @@ namespace AlinSpace.FluentCommands
             {
                 LockExecutionGroup(command.ExecutionGroup);
                 
-                await command.OriginalCommand
-                    .ExecuteAsync(parameter)
-                    .ConfigureAwait(settings.ContinueOnCapturedContext);
-            }
-            catch (Exception)
-            {
-                if (settings.IgnoreExceptionsFromCommands)
-                    return;
-
-                throw;
-            }
-            finally
-            {
-                UnlockExecutionGroup(command.ExecutionGroup);
-            }
-        }
-
-        #endregion
-
-        #region CanExecute / Execute (Generic)
-
-        /// <summary>
-        /// Can execute command from execution group.
-        /// </summary>
-        /// <param name="command">Execution group command.</param>
-        /// <param name="parameter">Command parameter.</param>
-        /// <returns>True, if the command can execute; false otherwise.</returns>
-        bool CanExecuteCommandFromExecutionGroup<TParameter>(ExecutionGroupCommand<TParameter> command, TParameter parameter)
-        {
-            if (command.ExecutionGroup.LockedCounter > 0)
-                return false;
-
-            if (settings.IgnoreIndividualCanExecute)
-                return true;
-
-            try
-            {
-                return command.OriginalCommand.CanExecute(parameter);
-            }
-            catch (Exception)
-            {
-                if (settings.IgnoreExceptionsFromCommands)
-                    return false;
-
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Execute command from execution group.
-        /// </summary>
-        /// <param name="command">Execution group command.</param>
-        /// <param name="parameter">Command parameter.</param>
-        async void ExecuteCommandFromExecutionGroup<TParameter>(ExecutionGroupCommand<TParameter> command, TParameter parameter)
-        {
-            if (settings.VerifyCanExecuteBeforeExecution)
-            {
-                if (!command.OriginalCommand.CanExecute(parameter))
-                    return;
-            }
-
-            try
-            {
-                LockExecutionGroup(command.ExecutionGroup);
-
                 await command.OriginalCommand
                     .ExecuteAsync(parameter)
                     .ConfigureAwait(settings.ContinueOnCapturedContext);
@@ -334,27 +271,11 @@ namespace AlinSpace.FluentCommands
             /// </summary>
             /// <param name="command">Command to register.</param>
             /// <returns>Registered command.</returns>
-            public ICommand Register(IFluentCommand command)
+            public IFluentCommand Register(IFluentCommand command)
             {
                 var executionGroupCommand = new ExecutionGroupCommand(
                     commandManager: commandManager,
                     executionGroup: this, 
-                    originalCommand: command);
-
-                Commands.Add(executionGroupCommand);
-                return executionGroupCommand;
-            }
-
-            /// <summary>
-            /// Register command to the execution group.
-            /// </summary>
-            /// <param name="command">Command to register.</param>
-            /// <returns>Registered command.</returns>
-            public ICommand<TParameter> Register<TParameter>(IFluentCommand<TParameter> command)
-            {
-                var executionGroupCommand = new ExecutionGroupCommand<TParameter>(
-                    commandManager: commandManager,
-                    executionGroup: this,
                     originalCommand: command);
 
                 Commands.Add(executionGroupCommand);
@@ -365,7 +286,7 @@ namespace AlinSpace.FluentCommands
         /// <summary>
         /// Can execute changed command.
         /// </summary>
-        interface ICanExecuteChangedCommand : ICommand
+        interface ICanExecuteChangedCommand : IFluentCommand
         {
             /// <summary>
             /// Raise can execute changed.
@@ -439,106 +360,13 @@ namespace AlinSpace.FluentCommands
             }
 
             /// <summary>
-            /// Execute command.
+            /// Execute command asynchronously.
             /// </summary>
             /// <param name="parameter">Command parameter.</param>
-            public void Execute(object parameter)
+            /// <returns>Task.</returns>
+            public Task ExecuteAsync(object parameter = null)
             {
-                commandManager.ExecuteCommandFromExecutionGroup(this, parameter);
-            }
-        }
-
-        /// <summary>
-        /// Execution group command (generic).
-        /// </summary>
-        class ExecutionGroupCommand<TParameter> : ICanExecuteChangedCommand, ICommand<TParameter>
-        {
-            readonly FluentCommandManager commandManager;
-
-            /// <summary>
-            /// Execution group.
-            /// </summary>
-            public ExecutionGroup ExecutionGroup { get; }
-
-            /// <summary>
-            /// Original command.
-            /// </summary>
-            public IFluentCommand<TParameter> OriginalCommand { get; }
-
-            /// <summary>
-            /// Constructor.
-            /// </summary>
-            public ExecutionGroupCommand(
-                FluentCommandManager commandManager,
-                ExecutionGroup executionGroup,
-                IFluentCommand<TParameter> originalCommand)
-            {
-                this.commandManager = commandManager;
-                ExecutionGroup = executionGroup;
-                OriginalCommand = originalCommand;
-
-                OriginalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
-            }
-
-            /// <summary>
-            /// Can execute changed.
-            /// </summary>
-            public event EventHandler CanExecuteChanged = delegate { };
-
-            /// <summary>
-            /// Raise can execute changed.
-            /// </summary>
-            public void RaiseCanExecuteChanged()
-            {
-                try
-                {
-                    CanExecuteChanged(this, EventArgs.Empty);
-                }
-                catch (Exception)
-                {
-                    if (commandManager.settings.IgnoreExceptionsFromCommands)
-                        return;
-
-                    throw;
-                }
-            }
-
-            /// <summary>
-            /// Can execute.
-            /// </summary>
-            /// <param name="parameter">Command parameter.</param>
-            /// <returns>True, if command can exeucte; false otherwise.</returns>
-            public bool CanExecute(object parameter)
-            {
-                return CanExecute((TParameter)parameter);
-            }
-
-            /// <summary>
-            /// Can execute.
-            /// </summary>
-            /// <param name="parameter">Command parameter.</param>
-            /// <returns>True, if command can exeucte; false otherwise.</returns>
-            public bool CanExecute(TParameter parameter)
-            {
-                return commandManager.CanExecuteCommandFromExecutionGroup(this, parameter);
-            }
-
-            /// <summary>
-            /// Execute command.
-            /// </summary>
-            /// <param name="parameter">Command parameter.</param>
-            public void Execute(object parameter)
-            {
-                Execute((TParameter)parameter);
-            }
-
-            /// <summary>
-            /// Execute command.
-            /// </summary>
-            /// <param name="parameter">Command parameter.</param>
-            public void Execute(TParameter parameter)
-            {
-                commandManager.ExecuteCommandFromExecutionGroup(this, parameter);
+                return commandManager.ExecuteCommandFromExecutionGroupAsync(this, parameter);
             }
         }
 

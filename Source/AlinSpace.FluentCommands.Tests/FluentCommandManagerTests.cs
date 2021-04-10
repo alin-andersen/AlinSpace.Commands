@@ -24,7 +24,7 @@ namespace AlinSpace.FluentCommands.Tests
         /// Command A is expected be executed.
         /// </remarks>
         [Fact]
-        public void BlockCommands()
+        public async void BlockCommands()
         {
             // Setup
 
@@ -36,7 +36,7 @@ namespace AlinSpace.FluentCommands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.CompletedTask);
 
-            ICommand command = null;
+            IFluentCommand command = null;
 
             FluentCommandManager
                 .New()
@@ -44,7 +44,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             // Act
 
-            command.Execute(null);
+            await command.ExecuteAsync(null);
 
             // Assert
 
@@ -92,8 +92,8 @@ namespace AlinSpace.FluentCommands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            ICommand commandA = null;
-            ICommand commandB = null;
+            IFluentCommand commandA = null;
+            IFluentCommand commandB = null;
 
             FluentCommandManager
                 .New()
@@ -105,7 +105,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             // Act
 
-            commandA.Execute(null);
+            var _ = commandA.ExecuteAsync(null);
 
             // Assert
 
@@ -158,8 +158,8 @@ namespace AlinSpace.FluentCommands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            ICommand commandA = null;
-            ICommand commandB = null;
+            IFluentCommand commandA = null;
+            IFluentCommand commandB = null;
 
             FluentCommandManager
                 .New()
@@ -168,7 +168,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             // Act
 
-            commandA.Execute(null);
+            var _ = commandA.ExecuteAsync(null);
 
             // Assert
 
@@ -231,9 +231,9 @@ namespace AlinSpace.FluentCommands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            ICommand commandA = null;
-            ICommand commandB = null;
-            ICommand commandC = null;
+            IFluentCommand commandA = null;
+            IFluentCommand commandB = null;
+            IFluentCommand commandC = null;
 
             FluentCommandManager
                 .New()
@@ -243,7 +243,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             // Act
 
-            commandA.Execute(null);
+            var _ = commandA.ExecuteAsync(null);
 
             // Assert
 
@@ -312,9 +312,9 @@ namespace AlinSpace.FluentCommands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            ICommand commandA = null;
-            ICommand commandB = null;
-            ICommand commandC = null;
+            IFluentCommand commandA = null;
+            IFluentCommand commandB = null;
+            IFluentCommand commandC = null;
 
             FluentCommandManager
                 .New()
@@ -326,7 +326,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             // Act
 
-            commandA.Execute(null);
+            var _ = commandA.ExecuteAsync(null);
 
             // Assert
 
@@ -396,9 +396,9 @@ namespace AlinSpace.FluentCommands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            ICommand commandA = null;
-            ICommand commandB = null;
-            ICommand commandC = null;
+            IFluentCommand commandA = null;
+            IFluentCommand commandB = null;
+            IFluentCommand commandC = null;
 
             FluentCommandManager
                 .New()
@@ -410,7 +410,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             // Act
 
-            commandA.Execute(null);
+            var _ = commandA.ExecuteAsync(null);
 
             // Assert
 
@@ -479,9 +479,9 @@ namespace AlinSpace.FluentCommands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            ICommand commandA = null;
-            ICommand commandB = null;
-            ICommand commandC = null;
+            IFluentCommand commandA = null;
+            IFluentCommand commandB = null;
+            IFluentCommand commandC = null;
 
             FluentCommandManager
                 .New()
@@ -493,7 +493,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             // Act
 
-            commandA.Execute(null);
+            var _ = commandA.ExecuteAsync(null);
 
             // Assert
 

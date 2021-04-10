@@ -11,14 +11,7 @@ namespace AlinSpace.FluentCommands
         /// Register command to the command group.
         /// </summary>
         /// <param name="command">Command to register.</param>
-        /// <returns>Registered command.</returns>
-        ICommand Register(IFluentCommand command);
-
-        /// <summary>
-        /// Register command to the command group.
-        /// </summary>
-        /// <param name="command">Command to register.</param>
-        /// <returns>Registered command.</returns>
-        ICommand<TParameter> Register<TParameter>(IFluentCommand<TParameter> command);
+        /// <returns>Registered fluent command.</returns>
+        IFluentCommand Register(IFluentCommand command);
     }
 }
