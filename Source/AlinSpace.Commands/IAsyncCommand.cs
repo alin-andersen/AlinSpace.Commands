@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Fluent command interface.
+    /// Represents an asynchronous command interface.
     /// </summary>
-    public interface IFluentCommand
+    public interface IAsyncCommand
     {
         /// <summary>
         /// Can execute changed.

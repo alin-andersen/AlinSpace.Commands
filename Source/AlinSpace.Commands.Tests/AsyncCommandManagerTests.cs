@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xunit;
 
-namespace AlinSpace.FluentCommands.Tests
+namespace AlinSpace.Commands.Tests
 {
     /// <summary>
-    /// Tests for <see cref="FluentCommandManager"/>.
+    /// Tests for <see cref="AsyncCommandManager"/>.
     /// </summary>
-    public class FluentCommandManagerTests
+    public class AsyncCommandManagerTests
     {
         /// <summary>
         /// Tests that the command manager will block commands as expected.
@@ -38,7 +38,7 @@ namespace AlinSpace.FluentCommands.Tests
 
             IFluentCommand command = null;
 
-            FluentCommandManager
+            AsyncCommandManager
                 .New()
                 .AddGroup(eg => command = eg.Register(commandMock.Object));
 
@@ -95,7 +95,7 @@ namespace AlinSpace.FluentCommands.Tests
             IFluentCommand commandA = null;
             IFluentCommand commandB = null;
 
-            FluentCommandManager
+            AsyncCommandManager
                 .New()
                 .AddGroup(eg =>
                 {
@@ -161,7 +161,7 @@ namespace AlinSpace.FluentCommands.Tests
             IFluentCommand commandA = null;
             IFluentCommand commandB = null;
 
-            FluentCommandManager
+            AsyncCommandManager
                 .New()
                 .AddGroup(eg => commandA = eg.Register(commandMockA.Object))
                 .AddGroup(eg => commandB = eg.Register(commandMockB.Object));
@@ -235,7 +235,7 @@ namespace AlinSpace.FluentCommands.Tests
             IFluentCommand commandB = null;
             IFluentCommand commandC = null;
 
-            FluentCommandManager
+            AsyncCommandManager
                 .New()
                 .AddGroup(eg => commandA = eg.Register(commandMockA.Object))
                 .AddGroup(eg => commandB = eg.Register(commandMockB.Object))
@@ -316,7 +316,7 @@ namespace AlinSpace.FluentCommands.Tests
             IFluentCommand commandB = null;
             IFluentCommand commandC = null;
 
-            FluentCommandManager
+            AsyncCommandManager
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),
@@ -400,7 +400,7 @@ namespace AlinSpace.FluentCommands.Tests
             IFluentCommand commandB = null;
             IFluentCommand commandC = null;
 
-            FluentCommandManager
+            AsyncCommandManager
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),
@@ -483,7 +483,7 @@ namespace AlinSpace.FluentCommands.Tests
             IFluentCommand commandB = null;
             IFluentCommand commandC = null;
 
-            FluentCommandManager
+            AsyncCommandManager
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),

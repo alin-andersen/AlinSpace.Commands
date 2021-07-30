@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// <see cref="ICommand"/> to <see cref="IFluentCommand"/>.
+    /// <see cref="ICommand"/> to <see cref="IAsyncCommand"/>.
     /// </summary>
-    public class CommandToFluentCommand : IFluentCommand
+    public class CommandToAsyncCommand : IAsyncCommand
     {
         readonly ICommand command;
 
@@ -15,7 +15,7 @@ namespace AlinSpace.FluentCommands
         /// Constructor.
         /// </summary>
         /// <param name="command">Command.</param>
-        public CommandToFluentCommand(ICommand command)
+        public CommandToAsyncCommand(ICommand command)
         {
             this.command = command ?? throw new ArgumentNullException(nameof(command));
             command.CanExecuteChanged += (sender, args) => CanExecuteChanged(sender, args);

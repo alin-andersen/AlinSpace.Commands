@@ -1,4 +1,4 @@
-﻿namespace AlinSpace.FluentCommands
+﻿namespace AlinSpace.Exceptions
 {
     /// <summary>
     /// Group lock behaviour.

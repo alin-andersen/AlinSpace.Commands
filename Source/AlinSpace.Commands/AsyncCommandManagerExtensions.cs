@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Extensions for <see cref="IFluentCommandManager"/>.
+    /// Extensions for <see cref="IAsyncCommandManager"/>.
     /// </summary>
-    public static class FluentCommandManagerExtensions
+    public static class AsyncCommandManagerExtensions
     {
         /// <summary>
         /// When executing a command from this execution group lock all groups.
@@ -13,7 +13,7 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockAll(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
+        public static IAsyncCommandManager LockAll(this IAsyncCommandManager commandManager, Action<IAsyncCommandGroup> executionGroupCallback)
         {
             return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockAllGroups);
         }
@@ -24,7 +24,7 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockOthers(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
+        public static IAsyncCommandManager LockOthers(this IAsyncCommandManager commandManager, Action<IAsyncCommandGroup> executionGroupCallback)
         {
             return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockAllOtherGroups);
         }
@@ -35,7 +35,7 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockThis(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
+        public static IAsyncCommandManager LockThis(this IAsyncCommandManager commandManager, Action<IAsyncCommandGroup> executionGroupCallback)
         {
             return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockThisGroup);
         }
@@ -46,7 +46,7 @@ namespace AlinSpace.FluentCommands
         /// <param name="commandManager">Command manager.</param>
         /// <param name="executionGroupCallback">Execution group callback.</param>
         /// <returns>Command manager.</returns>
-        public static IFluentCommandManager LockNothing(this IFluentCommandManager commandManager, Action<ICommandGroup> executionGroupCallback)
+        public static IAsyncCommandManager LockNothing(this IAsyncCommandManager commandManager, Action<IAsyncCommandGroup> executionGroupCallback)
         {
             return commandManager.AddGroup(executionGroupCallback, GroupLockBehavior.LockNothing);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
     /// Extensions for <see cref="IEnumerable{T}"/>.

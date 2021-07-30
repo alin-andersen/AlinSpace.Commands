@@ -1,28 +1,28 @@
-﻿namespace AlinSpace.FluentCommands
+﻿namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Settings for <see cref="IFluentCommandManager"/>.
+    /// Settings for <see cref="IAsyncCommandManager"/>.
     /// </summary>
-    public interface IFluentCommandManagerSettings
+    public interface IAsyncCommandManagerSettings
     {
         /// <summary>
         /// Verify CanExecute allows execution before invoking a command.
         /// </summary>
-        public bool VerifyCanExecuteBeforeExecution { set; }
+        bool VerifyCanExecuteBeforeExecution { set; }
 
         /// <summary>
         /// Ignore CanExecute of all commands.
         /// </summary>
-        public bool IgnoreIndividualCanExecute { set; }
+        bool IgnoreIndividualCanExecute { set; }
 
         /// <summary>
         /// Ignore exceptions thrown from commands.
         /// </summary>
-        public bool IgnoreExceptionsFromCommands { set; }
+        bool IgnoreExceptionsFromCommands { set; }
 
         /// <summary>
         /// Continue on captured context.
         /// </summary>
-        public bool ContinueOnCapturedContext { set; }
+        bool ContinueOnCapturedContext { set; }
     }
 }

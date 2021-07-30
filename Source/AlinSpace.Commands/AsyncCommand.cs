@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Default implementation of <see cref="IFluentCommand"/>.
+    /// Default implementation of <see cref="IAsyncCommand"/>.
     /// </summary>
-    public class FluentCommand : IFluentCommand
+    public class AsyncCommand : IAsyncCommand
     {
         readonly bool verifyCanExecuteBeforeExecution;
         readonly bool continueOnCapturedContext;
@@ -24,12 +24,12 @@ namespace AlinSpace.FluentCommands
         /// </summary>
         /// <param name="verifyCanExecuteBeforeExecution"></param>
         /// <param name="continueOnCapturedContext"></param>
-        /// <returns>Fluent command.</returns>
-        public static FluentCommand New(
+        /// <returns>Async command.</returns>
+        public static AsyncCommand New(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
-            return new FluentCommand(
+            return new AsyncCommand(
                 verifyCanExecuteBeforeExecution,
                 continueOnCapturedContext);
         }
@@ -39,7 +39,7 @@ namespace AlinSpace.FluentCommands
         /// </summary>
         /// <param name="verifyCanExecuteBeforeExecution"></param>
         /// <param name="continueOnCapturedContext"></param>
-        public FluentCommand(
+        public AsyncCommand(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
@@ -51,8 +51,8 @@ namespace AlinSpace.FluentCommands
         /// On can execute callback.
         /// </summary>
         /// <param name="executeFunc"></param>
-        /// <returns>Fluent command.</returns>
-        public FluentCommand OnCanExecute(Func<object, bool> canExecuteFunc)
+        /// <returns>Async command.</returns>
+        public AsyncCommand OnCanExecute(Func<object, bool> canExecuteFunc)
         {
             this.canExecuteFunc = canExecuteFunc;
             return this;
@@ -62,8 +62,8 @@ namespace AlinSpace.FluentCommands
         /// On execute asynchronously callback.
         /// </summary>
         /// <param name="executeAction"></param>
-        /// <returns>Fluent command.</returns>
-        public FluentCommand OnExecuteAsync(Func<object, Task> executeFunc)
+        /// <returns>Async command.</returns>
+        public AsyncCommand OnExecuteAsync(Func<object, Task> executeFunc)
         {
             this.executeFunc = executeFunc;
             return this;

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
     /// Extensions for <see cref="ICommand"/>.
@@ -8,13 +8,13 @@ namespace AlinSpace.FluentCommands
     public static class CommandExtensions
     {
         /// <summary>
-        /// Convert to <see cref="IFluentCommand"/>.
+        /// Convert to <see cref="IAsyncCommand"/>.
         /// </summary>
         /// <param name="command">Command.</param>
-        /// <returns>Fluent command.</returns>
-        public static IFluentCommand ToFluentCommand(this ICommand command)
+        /// <returns>Async command.</returns>
+        public static IAsyncCommand ToAsyncCommand(this ICommand command)
         {
-            return new CommandToFluentCommand(command);
+            return new CommandToAsyncCommand(command);
         }
     }
 }

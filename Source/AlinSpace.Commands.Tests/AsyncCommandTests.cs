@@ -1,12 +1,11 @@
-﻿using FluentAssertions;
-using Xunit;
+﻿using Xunit;
 
-namespace AlinSpace.FluentCommands.Tests
+namespace AlinSpace.Commands.Tests
 {
     /// <summary>
     /// Tests for <see cref="FluentCommand"/> and <see cref="FluentCommand{TParameter}"/>.
     /// </summary>
-    public class FluentCommandTests
+    public class AsyncCommandTests
     {
         /// <summary>
         /// Tests no execution.

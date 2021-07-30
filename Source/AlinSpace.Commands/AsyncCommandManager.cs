@@ -4,17 +4,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Default implementation of <see cref="IFluentCommandManager"/>.
+    /// Default implementation of <see cref="IAsyncCommandManager"/>.
     /// </summary>
-    public class FluentCommandManager : IFluentCommandManager
+    public class AsyncCommandManager : IAsyncCommandManager
     {
         /// <summary>
         /// Settings.
         /// </summary>
-        readonly FluentCommandManagerSettings settings = new FluentCommandManagerSettings();
+        readonly AsyncCommandManagerSettings settings = new AsyncCommandManagerSettings();
 
         /// <summary>
         /// Execution groups.
@@ -25,17 +25,17 @@ namespace AlinSpace.FluentCommands
         /// Create command manager.
         /// </summary>
         /// <param name="settingsCallback">Optional settings callback.</param>
-        /// <returns>Fluent command manager.</returns>
-        public static FluentCommandManager New(Action<IFluentCommandManagerSettings> settingsCallback = null)
+        /// <returns>Async command manager.</returns>
+        public static AsyncCommandManager New(Action<IAsyncCommandManagerSettings> settingsCallback = null)
         {
-            return new FluentCommandManager(settingsCallback);
+            return new AsyncCommandManager(settingsCallback);
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="settingsCallback">Optional settings callback.</param>
-        public FluentCommandManager(Action<IFluentCommandManagerSettings> settingsCallback = null)
+        public AsyncCommandManager(Action<IAsyncCommandManagerSettings> settingsCallback = null)
         {
             settingsCallback?.Invoke(settings);
         }
@@ -46,7 +46,7 @@ namespace AlinSpace.FluentCommands
         /// <param name="exectionGroupCallback">Execution group callback.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        public IFluentCommandManager AddGroup(Action<ICommandGroup> exectionGroupCallback, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups)
+        public IAsyncCommandManager AddGroup(Action<IAsyncCommandGroup> exectionGroupCallback, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups)
         {
             var executionGroup = new ExecutionGroup(
                 commandManager: this,
@@ -61,9 +61,9 @@ namespace AlinSpace.FluentCommands
         #region Internal
 
         /// <summary>
-        /// Default value for <see cref="IFluentCommandManagerSettings"/>.
+        /// Default value for <see cref="IAsyncCommandManagerSettings"/>.
         /// </summary>
-        class FluentCommandManagerSettings : IFluentCommandManagerSettings
+        class AsyncCommandManagerSettings : IAsyncCommandManagerSettings
         {
             /// <summary>
             /// Verify CanExecute allows execution before invoking a command.
@@ -238,9 +238,9 @@ namespace AlinSpace.FluentCommands
         /// <summary>
         /// Execution group.
         /// </summary>
-        class ExecutionGroup : ICommandGroup
+        class ExecutionGroup : IAsyncCommandGroup
         {
-            readonly FluentCommandManager commandManager;
+            readonly AsyncCommandManager commandManager;
 
             /// <summary>
             /// Execution lock.
@@ -260,7 +260,7 @@ namespace AlinSpace.FluentCommands
             /// <summary>
             /// Constructor.
             /// </summary>
-            public ExecutionGroup(FluentCommandManager commandManager, GroupLockBehavior @lock)
+            public ExecutionGroup(AsyncCommandManager commandManager, GroupLockBehavior @lock)
             {
                 this.commandManager = commandManager;
                 Lock = @lock;
@@ -271,7 +271,7 @@ namespace AlinSpace.FluentCommands
             /// </summary>
             /// <param name="command">Command to register.</param>
             /// <returns>Registered command.</returns>
-            public IFluentCommand Register(IFluentCommand command)
+            public IAsyncCommand Register(IAsyncCommand command)
             {
                 var executionGroupCommand = new ExecutionGroupCommand(
                     commandManager: commandManager,
@@ -286,7 +286,7 @@ namespace AlinSpace.FluentCommands
         /// <summary>
         /// Can execute changed command.
         /// </summary>
-        interface ICanExecuteChangedCommand : IFluentCommand
+        interface ICanExecuteChangedCommand : IAsyncCommand
         {
             /// <summary>
             /// Raise can execute changed.
@@ -299,7 +299,7 @@ namespace AlinSpace.FluentCommands
         /// </summary>
         class ExecutionGroupCommand : ICanExecuteChangedCommand
         {
-            readonly FluentCommandManager commandManager;
+            readonly AsyncCommandManager commandManager;
 
             /// <summary>
             /// Execution group.
@@ -309,15 +309,15 @@ namespace AlinSpace.FluentCommands
             /// <summary>
             /// Original command.
             /// </summary>
-            public IFluentCommand OriginalCommand { get; }
+            public IAsyncCommand OriginalCommand { get; }
 
             /// <summary>
             /// Constructor.
             /// </summary>
             public ExecutionGroupCommand(
-                FluentCommandManager commandManager,
+                AsyncCommandManager commandManager,
                 ExecutionGroup executionGroup,
-                IFluentCommand originalCommand)
+                IAsyncCommand originalCommand)
             {
                 this.commandManager = commandManager;
                 ExecutionGroup = executionGroup;

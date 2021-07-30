@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Fluent command manager interface.
+    /// Async command manager interface.
     /// </summary>
-    public interface IFluentCommandManager
+    public interface IAsyncCommandManager
     {
         /// <summary>
         /// Add execution group.
@@ -13,6 +13,6 @@ namespace AlinSpace.FluentCommands
         /// <param name="exectionGroupCallback">Execution group callback.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        IFluentCommandManager AddGroup(Action<ICommandGroup> exectionGroupCallback, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups);
+        IAsyncCommandManager AddGroup(Action<IAsyncCommandGroup> exectionGroupCallback, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups);
     }
 }

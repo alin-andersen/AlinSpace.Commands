@@ -1,4 +1,4 @@
-﻿namespace AlinSpace.FluentCommands
+﻿namespace AlinSpace.Exceptions
 {
     /// <summary>
     /// Generic version of <see cref="System.Windows.Input.ICommand"/>.

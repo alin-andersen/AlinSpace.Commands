@@ -1,7 +1,7 @@
-﻿namespace AlinSpace.FluentCommands
+﻿namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Extensions for <see cref="ICommandGroup"/>.
+    /// Extensions for <see cref="IAsyncCommandGroup"/>.
     /// </summary>
     public static class CommandGroupExtensions
     {
@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="group">Command group.</param>
         /// <param name="command">Command.</param>
-        public static void Register(ICommandGroup group, ref IFluentCommand command)
+        public static void Register(IAsyncCommandGroup group, ref IAsyncCommand command)
         {
             command = group.Register(command);
         }

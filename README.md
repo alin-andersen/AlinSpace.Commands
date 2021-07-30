@@ -1,38 +1,38 @@
-<img src="https://github.com/onixion/FluentCommands/blob/main/Assets/Icon.jpg" width="200" height="200">
+<img src="https://github.com/onixion/AlinSpace.Commands/blob/main/Assets/Icon.jpg" width="200" height="200">
 
-# FluentCommands
-[![NuGet version (FluentCommands)](https://img.shields.io/nuget/v/AlinSpace.FluentCommands.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.FluentCommands/)
+# AsyncCommands
+[![NuGet version (AsyncCommands)](https://img.shields.io/nuget/v/AlinSpace.Commands.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.Commands/)
 
-A simple fluent library for command and command manager patterns.
+A simple Async library for command and command manager patterns.
 
-The *IFluentCommand* interface is very similar to the *ICommand* interface, but they are **not** the same.
-The fluent interface is a fully asynchronous command interface, whereas *ICommand* is **not**.
+The *IAsyncCommand* interface is very similar to the *ICommand* interface, but they are **not** the same.
+The Async interface is a fully asynchronous command interface, whereas *ICommand* is **not**.
 
-[NuGet package](https://www.nuget.org/packages/AlinSpace.FluentCommands/)
+[NuGet package](https://www.nuget.org/packages/AlinSpace.Commands/)
 
-## Examples - FluentCommand
+## Examples - AsyncCommand
 
-This is the *FluentCommand*:
+This is the *AsyncCommand*:
 
  ```csharp
-var fluentCommand = FluentCommand
+var asyncCommand = AsyncCommand
     .New()
     .OnCanChange(_ => canExecute)
     .OnExecuteAsync(ExecuteSomethingAsync);
     
-var genericFluentCommand = FluentCommand
+var genericAsyncCommand = AsyncCommand
     .New<int>()
     .OnCanChange(_ => canExecute)
     .OnExecuteAsync(ExecuteSomethingWithIntAsync);
     
 ```
 
-## Examples - AbstractFluentCommand
+## Examples - AbstractAsyncCommand
 
-This is the *AbstractFluentCommand*:
+This is the *AbstractAsyncCommand*:
 
  ```csharp
-public class MyFluentCommand : AbstractFluentCommand
+public class MyAsyncCommand : AbstractAsyncCommand
 {
     ...
     public async Task ExecuteAsync(object parameter = null)
@@ -42,7 +42,7 @@ public class MyFluentCommand : AbstractFluentCommand
     ...
 }
 
-public class MyGenericFluentCommand<int> : AbstractFluentCommand
+public class MyGenericAsyncCommand<int> : AbstractAsyncCommand
 {
     ...
     public async Task ExecuteAsync(int parameter = null)
@@ -53,25 +53,25 @@ public class MyGenericFluentCommand<int> : AbstractFluentCommand
 }
 ```
 
-## Examples - FluentCommandManager
+## Examples - AsyncCommandManager
 
-The *FluentCommandManager* allows to create *command groups*. 
+The *AsyncCommandManager* allows to create *command groups*. 
 Command groups dictate the availability of command execution.
-Fluent commands are registered to one command group.
-When registering a *FluentCommand* to a group, it will return an *ICommand* instance.
+Async commands are registered to one command group.
+When registering a *AsyncCommand* to a group, it will return an *ICommand* instance.
 This instance can be passed to the view that consumes the command.
 The command manager will hide all the logic for locking, unlocking, and notifying commands for you.
-Additionally, each registered fluent command can also add instance-specific logic for CanExecute.
+Additionally, each registered Async command can also add instance-specific logic for CanExecute.
 
 Here are some examples:
 
 ```csharp
-FluentCommandManager
+AsyncCommandManager
     .New()
     .LockAll(e => 
     {
-       SaveCommand = e.Register(SaveFluentCommand);
-       DeleteCommand = e.Register(DeleteFluentCommand);
+       SaveCommand = e.Register(SaveAsyncCommand);
+       DeleteCommand = e.Register(DeleteAsyncCommand);
     });
 ```
 
@@ -88,16 +88,16 @@ These are the currently supported group lock behaviors:
  However, the *SearchCommand* will lock all commands registered to the command manager except itself when executed.
  
  ```csharp
-FluentCommandManager
+AsyncCommandManager
     .New()
     .LockAll(eg => 
     {
-       SaveCommand = eg.Register(SaveFluentCommand);
-       DeleteCommand = eg.Register(DeleteFluentCommand);
+       SaveCommand = eg.Register(SaveAsyncCommand);
+       DeleteCommand = eg.Register(DeleteAsyncCommand);
     })
     .LockAllOthers(eg => 
     {
-       SearchCommand = eg.Register(SearchFluentCommand);
+       SearchCommand = eg.Register(SearchAsyncCommand);
     });
 ```
 
@@ -107,7 +107,7 @@ The *Block10Command* will do 10 seconds of work.
 The *Block20Command* will do 20 seconds of work.
 
 ```csharp
-FluentCommandManager
+AsyncCommandManager
     .New()
     .LockThis(eg => Block10Command = eg.Register(Block10Command))
     .LockAll(eg => Block20Command = eg.Register(Block20Command));

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IFluentCommand"/>.
+    /// Abstract implementation of <see cref="IAsyncCommand"/>.
     /// </summary>
-    public abstract class AbstractFluentCommand : IFluentCommand
+    public abstract class AbstractAsyncCommand : IAsyncCommand
     {
         /// <summary>
         /// Can execute changed.

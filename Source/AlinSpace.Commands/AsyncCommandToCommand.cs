@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace AlinSpace.FluentCommands
+namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// <see cref="FluentCommand"/> to <see cref="ICommand"/>.
+    /// <see cref="AsyncCommand"/> to <see cref="ICommand"/>.
     /// </summary>
-    public class FluentCommandToCommand : ICommand
+    public class AsyncCommandToCommand : ICommand
     {
-        readonly IFluentCommand command;
+        readonly IAsyncCommand command;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="command">Fluent command.</param>
-        public FluentCommandToCommand(IFluentCommand command)
+        /// <param name="command">Async command.</param>
+        public AsyncCommandToCommand(IAsyncCommand command)
         {
             this.command = command ?? throw new ArgumentNullException(nameof(command));
             command.CanExecuteChanged += (sender, args) => CanExecuteChanged(sender, args);
