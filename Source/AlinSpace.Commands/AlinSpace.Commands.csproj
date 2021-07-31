@@ -15,10 +15,10 @@
     <PackageId>AlinSpace.Commands</PackageId>
     <Authors>Alin Andersen</Authors>
     <Product>AlinSpace.Commands</Product>
-    <Description>Pure asynchronous command implementation and command manager.</Description>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
-    <FileVersion>5.0.0.0</FileVersion>
-    <Version>5.0.0.0</Version>
+    <Description>Pure asynchronous command implementation and flexible command manager.</Description>
+    <AssemblyVersion>5.0.2.0</AssemblyVersion>
+    <FileVersion>5.0.2.0</FileVersion>
+    <Version>5.0.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Icon.png">

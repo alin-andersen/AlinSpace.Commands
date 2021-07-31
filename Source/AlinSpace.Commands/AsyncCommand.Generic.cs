@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 namespace AlinSpace.Exceptions
 {
     /// <summary>
-    /// Default implementation of <see cref="IAsyncCommand"/>.
+    /// Default implementation of <see cref="IAsyncCommand{TParameter}"/>.
     /// </summary>
-    public class AsyncCommand : AbstractAsyncCommand
+    public class AsyncCommand<TParameter> : AbstractAsyncCommand<TParameter>
     {
         readonly bool verifyCanExecuteBeforeExecution;
         readonly bool continueOnCapturedContext;
 
-        Func<object, Task> executeFunc;
-        Func<object, bool> canExecuteFunc;
+        Func<TParameter, Task> executeFunc;
+        Func<TParameter, bool> canExecuteFunc;
 
         /// <summary>
         /// Static factory method.
@@ -20,11 +20,11 @@ namespace AlinSpace.Exceptions
         /// <param name="verifyCanExecuteBeforeExecution"></param>
         /// <param name="continueOnCapturedContext"></param>
         /// <returns>Async command.</returns>
-        public static AsyncCommand New(
+        public static AsyncCommand<TParameter> New(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
-            return new AsyncCommand(
+            return new AsyncCommand<TParameter>(
                 verifyCanExecuteBeforeExecution,
                 continueOnCapturedContext);
         }
@@ -47,7 +47,7 @@ namespace AlinSpace.Exceptions
         /// </summary>
         /// <param name="executeFunc"></param>
         /// <returns>Async command.</returns>
-        public AsyncCommand OnCanExecute(Func<object, bool> canExecuteFunc)
+        public AsyncCommand<TParameter> OnCanExecute(Func<TParameter, bool> canExecuteFunc)
         {
             this.canExecuteFunc = canExecuteFunc;
             return this;
@@ -58,7 +58,7 @@ namespace AlinSpace.Exceptions
         /// </summary>
         /// <param name="executeAction"></param>
         /// <returns>Async command.</returns>
-        public AsyncCommand OnExecuteAsync(Func<object, Task> executeFunc)
+        public AsyncCommand<TParameter> OnExecuteAsync(Func<TParameter, Task> executeFunc)
         {
             this.executeFunc = executeFunc;
             return this;
@@ -69,7 +69,7 @@ namespace AlinSpace.Exceptions
         /// </summary>
         /// <param name="parameter">Parameter.</param>
         /// <returns>True if can execute; false otherwise.</returns>
-        public override bool CanExecute(object parameter = null)
+        public override bool CanExecute(TParameter parameter = default)
         {
             if (canExecuteFunc == null)
                 return true;
@@ -82,7 +82,7 @@ namespace AlinSpace.Exceptions
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>Task.</returns>
-        public override async Task ExecuteAsync(object parameter = null)
+        public override async Task ExecuteAsync(TParameter parameter = default)
         {
             if (executeFunc == null)
                 return;

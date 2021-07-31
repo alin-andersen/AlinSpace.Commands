@@ -38,7 +38,6 @@ namespace AlinSpace.Exceptions
         /// Execute command asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        /// <returns>Task.</returns>
         public abstract Task ExecuteAsync(object parameter = null);
     }
 }
