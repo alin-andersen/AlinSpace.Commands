@@ -1,4 +1,4 @@
-<img src="https://github.com/onixion/AlinSpace.Commands/blob/main/Assets/Icon.jpg" width="200" height="200">
+<img src="https://github.com/onixion/AlinSpace.Commands/blob/main/Assets/Icon.png" width="200" height="200">
 
 # AsyncCommands
 [![NuGet version (AsyncCommands)](https://img.shields.io/nuget/v/AlinSpace.Commands.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.Commands/)
