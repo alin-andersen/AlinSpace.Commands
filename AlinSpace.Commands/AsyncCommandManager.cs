@@ -368,6 +368,8 @@ namespace AlinSpace.Exceptions
             {
                 return commandManager.ExecuteCommandFromExecutionGroupAsync(this, parameter);
             }
+
+            public static implicit ICommand 
         }
 
         #endregion

@@ -12,10 +12,11 @@ namespace AlinSpace.Exceptions
         /// Convert to <see cref="ICommand"/>.
         /// </summary>
         /// <param name="asyncCommand">Async command to convert.</param>
+        /// <param name="fireAndForgetOnExecution">Flag indicates whether or not the async command shall be fire and forget on execution.</param>
         /// <returns>Command.</returns>
-        public static ICommand ToCommand(this IAsyncCommand asyncCommand)
+        public static ICommand ToCommand(this IAsyncCommand asyncCommand, bool fireAndForgetOnExecution = true)
         {
-            return new AsyncCommandToCommand(asyncCommand);
+            return new AsyncCommandToCommand(asyncCommand, fireAndForgetOnExecution);
         }
 
         /// <summary>

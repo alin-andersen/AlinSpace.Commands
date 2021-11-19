@@ -17,8 +17,12 @@ namespace AlinSpace.Exceptions
         /// <summary>
         /// Static factory method.
         /// </summary>
-        /// <param name="verifyCanExecuteBeforeExecution"></param>
-        /// <param name="continueOnCapturedContext"></param>
+        /// <param name="verifyCanExecuteBeforeExecution">
+        /// This flag indicates whether or not the can execute shall should be called and checked before execution.
+        /// </param>
+        /// <param name="continueOnCapturedContext">
+        /// This flag indicates whether or not the command shall be executed on the captured context.
+        /// </param>
         /// <returns>Async command.</returns>
         public static AsyncCommand New(
             bool verifyCanExecuteBeforeExecution = false,
@@ -32,8 +36,12 @@ namespace AlinSpace.Exceptions
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="verifyCanExecuteBeforeExecution"></param>
-        /// <param name="continueOnCapturedContext"></param>
+        /// <param name="verifyCanExecuteBeforeExecution">
+        /// This flag indicates whether or not the can execute shall should be called and checked before execution.
+        /// </param>
+        /// <param name="continueOnCapturedContext">
+        /// This flag indicates whether or not the command shall be executed on the captured context.
+        /// </param>
         public AsyncCommand(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)

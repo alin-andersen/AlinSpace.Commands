@@ -8,15 +8,19 @@ namespace AlinSpace.Exceptions
     /// </summary>
     public class AsyncCommandToCommand : ICommand
     {
-        readonly IAsyncCommand command;
+        private readonly IAsyncCommand command;
+        private readonly bool fireAndForgetOnExecution;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="command">Async command.</param>
-        public AsyncCommandToCommand(IAsyncCommand command)
+        /// <param name="fireAndForgetOnExecution">Flag indicates whether or not the async command shall be fire and forget on execution.</param>
+        public AsyncCommandToCommand(IAsyncCommand command, bool fireAndForgetOnExecution = true)
         {
             this.command = command ?? throw new ArgumentNullException(nameof(command));
+            this.fireAndForgetOnExecution = fireAndForgetOnExecution;
+
             command.CanExecuteChanged += (sender, args) => CanExecuteChanged(sender, args);
         }
 
@@ -44,7 +48,10 @@ namespace AlinSpace.Exceptions
         /// <param name="parameter">Command parameter.</param>
         public void Execute(object parameter = null)
         {
-            var _ = command.ExecuteAsync(parameter);
+            var task = command.ExecuteAsync(parameter);
+
+            if (!fireAndForgetOnExecution)
+                task.Wait();
         }
     }
 }
