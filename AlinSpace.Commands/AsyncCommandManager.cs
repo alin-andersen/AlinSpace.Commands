@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace AlinSpace.Exceptions
 {
@@ -108,7 +107,7 @@ namespace AlinSpace.Exceptions
                     if (executionGroup.Lock == GroupLockBehavior.LockAllOtherGroups)
                         continue;
                 }
-                
+
                 executionGroupsToLock.Add(ex);
             }
 
@@ -155,7 +154,7 @@ namespace AlinSpace.Exceptions
                 {
                     executionGroupCommand.RaiseCanExecuteChanged();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     if (settings.IgnoreExceptionsFromCommands)
                         return;
@@ -215,7 +214,7 @@ namespace AlinSpace.Exceptions
             try
             {
                 LockExecutionGroup(command.ExecutionGroup);
-                
+
                 await command.OriginalCommand
                     .ExecuteAsync(parameter)
                     .ConfigureAwait(settings.ContinueOnCapturedContext);
@@ -275,7 +274,7 @@ namespace AlinSpace.Exceptions
             {
                 var executionGroupCommand = new ExecutionGroupCommand(
                     commandManager: commandManager,
-                    executionGroup: this, 
+                    executionGroup: this,
                     originalCommand: command);
 
                 Commands.Add(executionGroupCommand);
@@ -305,7 +304,7 @@ namespace AlinSpace.Exceptions
             /// Execution group.
             /// </summary>
             public ExecutionGroup ExecutionGroup { get; }
-            
+
             /// <summary>
             /// Original command.
             /// </summary>
@@ -369,7 +368,13 @@ namespace AlinSpace.Exceptions
                 return commandManager.ExecuteCommandFromExecutionGroupAsync(this, parameter);
             }
 
-            public static implicit ICommand 
+            /// <summary>
+            /// Implicit convertion to command.
+            /// </summary>
+            public static implicit operator AsyncCommandToCommand(ExecutionGroupCommand command)
+            {
+                return new AsyncCommandToCommand(command);
+            }
         }
 
         #endregion
