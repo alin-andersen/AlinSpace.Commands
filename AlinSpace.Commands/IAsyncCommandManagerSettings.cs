@@ -1,4 +1,4 @@
-﻿namespace AlinSpace.Exceptions
+﻿namespace AlinSpace.Commands
 {
     /// <summary>
     /// Settings for <see cref="IAsyncCommandManager"/>.

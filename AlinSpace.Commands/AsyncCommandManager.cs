@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AlinSpace.Exceptions
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Default implementation of <see cref="IAsyncCommandManager"/>.

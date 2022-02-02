@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace AlinSpace.Exceptions
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// <see cref="AsyncCommand"/> to <see cref="ICommand"/>.

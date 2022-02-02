@@ -1,4 +1,4 @@
-﻿namespace AlinSpace.Exceptions
+﻿namespace AlinSpace.Commands
 {
     /// <summary>
     /// Extensions for <see cref="IAsyncCommandGroup"/>.

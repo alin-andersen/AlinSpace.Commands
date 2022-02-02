@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AlinSpace.Exceptions
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Async command manager interface.

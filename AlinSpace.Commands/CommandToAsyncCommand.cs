@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AlinSpace.Exceptions
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// <see cref="ICommand"/> to <see cref="IAsyncCommand"/>.

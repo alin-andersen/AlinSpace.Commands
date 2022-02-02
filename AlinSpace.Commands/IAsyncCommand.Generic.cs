@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AlinSpace.Exceptions
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Represents a generic asynchronous command interface.
