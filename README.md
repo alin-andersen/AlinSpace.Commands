@@ -10,9 +10,9 @@ The *AlinSpace.Command.ICommand* interface is a fully asynchronous command inter
 
 [NuGet package](https://www.nuget.org/packages/AlinSpace.Command/)
 
-## Examples - AsyncCommand
+## Examples - *AlinSpace.Command.Command*
 
-This is the *Command*:
+This is the *AlinSpace.Command.Command*:
 
  ```csharp
 var command = Command
@@ -27,9 +27,9 @@ var genericCommand = Command
     
 ```
 
-## Examples - AbstractCommand
+## Examples - *AlinSpace.Command.AbstractCommand*
 
-This is the *AbstractCommand*:
+This is the *AlinSpace.Command.AbstractCommand*:
 
  ```csharp
 public class MyCommand : AbstractCommand
