@@ -1,9 +1,9 @@
-﻿namespace AlinSpace.Commands
+﻿namespace AlinSpace.Command
 {
     /// <summary>
-    /// Settings for <see cref="IAsyncCommandManager"/>.
+    /// Settings for <see cref="IManager"/>.
     /// </summary>
-    public interface IAsyncCommandManagerSettings
+    public interface IManagerSettings
     {
         /// <summary>
         /// Verify CanExecute allows execution before invoking a command.

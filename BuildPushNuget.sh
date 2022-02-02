@@ -1,4 +1,4 @@
 #!/bin/bash
 
 dotnet build -c Release
-dotnet nuget push AlinSpace.Commands/bin/Release/AlinSpace.Commands.*.nupkg --source github --skip-duplicate
+dotnet nuget push AlinSpace.Command/bin/Release/AlinSpace.Command.*.nupkg --source github --skip-duplicate

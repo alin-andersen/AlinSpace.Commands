@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace AlinSpace.Commands.Tests
+namespace AlinSpace.Command.Tests
 {
     /// <summary>
     /// Tests for <see cref="FluentCommand"/> and <see cref="FluentCommand{TParameter}"/>.

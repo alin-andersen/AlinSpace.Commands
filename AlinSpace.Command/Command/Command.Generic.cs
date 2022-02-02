@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AlinSpace.Commands
+namespace AlinSpace.Command
 {
     /// <summary>
-    /// Default implementation of <see cref="IAsyncCommand{TParameter}"/>.
+    /// Default implementation of <see cref="ICommand{TParameter}"/>.
     /// </summary>
-    public class AsyncCommand<TParameter> : AbstractAsyncCommand<TParameter>
+    public class Command<TParameter> : AbstractCommand<TParameter>
     {
         private readonly bool verifyCanExecuteBeforeExecution;
         private readonly bool continueOnCapturedContext;
@@ -24,11 +24,11 @@ namespace AlinSpace.Commands
         /// This flag indicates whether or not the command shall be executed on the captured context.
         /// </param>
         /// <returns>Async command.</returns>
-        public static AsyncCommand<TParameter> New(
+        public static Command<TParameter> New(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
-            return new AsyncCommand<TParameter>(
+            return new Command<TParameter>(
                 verifyCanExecuteBeforeExecution,
                 continueOnCapturedContext);
         }
@@ -42,7 +42,7 @@ namespace AlinSpace.Commands
         /// <param name="continueOnCapturedContext">
         /// This flag indicates whether or not the command shall be executed on the captured context.
         /// </param>
-        public AsyncCommand(
+        public Command(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
@@ -55,7 +55,7 @@ namespace AlinSpace.Commands
         /// </summary>
         /// <param name="executeFunc"></param>
         /// <returns>Async command.</returns>
-        public AsyncCommand<TParameter> OnCanExecute(Func<TParameter, bool> canExecuteFunc)
+        public Command<TParameter> OnCanExecute(Func<TParameter, bool> canExecuteFunc)
         {
             this.canExecuteFunc = canExecuteFunc;
             return this;
@@ -66,7 +66,7 @@ namespace AlinSpace.Commands
         /// </summary>
         /// <param name="executeAction"></param>
         /// <returns>Async command.</returns>
-        public AsyncCommand<TParameter> OnExecuteAsync(Func<TParameter, Task> executeFunc)
+        public Command<TParameter> OnExecuteAsync(Func<TParameter, Task> executeFunc)
         {
             this.executeFunc = executeFunc;
             return this;

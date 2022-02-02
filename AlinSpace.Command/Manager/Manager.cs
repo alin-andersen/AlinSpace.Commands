@@ -1,40 +1,41 @@
-﻿using System;
+﻿using AlinSpace.System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AlinSpace.Commands
+namespace AlinSpace.Command
 {
     /// <summary>
-    /// Default implementation of <see cref="IAsyncCommandManager"/>.
+    /// Default implementation of <see cref="IManager"/>.
     /// </summary>
-    public class AsyncCommandManager : IAsyncCommandManager
+    public partial class Manager : IManager
     {
         /// <summary>
         /// Settings.
         /// </summary>
-        readonly AsyncCommandManagerSettings settings = new AsyncCommandManagerSettings();
+        readonly CommandManagerSettings settings = new CommandManagerSettings();
 
         /// <summary>
         /// Execution groups.
         /// </summary>
-        readonly IList<ExecutionGroup> executionGroups = new List<ExecutionGroup>();
+        readonly IList<Group> executionGroups = new List<Group>();
 
         /// <summary>
         /// Create command manager.
         /// </summary>
         /// <param name="settingsCallback">Optional settings callback.</param>
         /// <returns>Async command manager.</returns>
-        public static AsyncCommandManager New(Action<IAsyncCommandManagerSettings> settingsCallback = null)
+        public static Manager New(Action<IManagerSettings> settingsCallback = null)
         {
-            return new AsyncCommandManager(settingsCallback);
+            return new Manager(settingsCallback);
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="settingsCallback">Optional settings callback.</param>
-        public AsyncCommandManager(Action<IAsyncCommandManagerSettings> settingsCallback = null)
+        public Manager(Action<IManagerSettings> settingsCallback = null)
         {
             settingsCallback?.Invoke(settings);
         }
@@ -42,27 +43,27 @@ namespace AlinSpace.Commands
         /// <summary>
         /// Add execution group.
         /// </summary>
-        /// <param name="exectionGroupCallback">Execution group callback.</param>
+        /// <param name="commandRegistrations">Command registrations.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        public IAsyncCommandManager AddGroup(Action<IAsyncCommandGroup> exectionGroupCallback, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups)
+        public IManager AddGroup(Action<IGroupRegistrator> commandRegistrations, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups)
         {
-            var executionGroup = new ExecutionGroup(
-                commandManager: this,
+            var group = new Group(
+                manager: this,
                 @lock: @lock);
 
-            exectionGroupCallback(executionGroup);
+            commandRegistrations(group);
 
-            executionGroups.Add(executionGroup);
+            executionGroups.Add(group);
             return this;
         }
 
         #region Internal
 
         /// <summary>
-        /// Default value for <see cref="IAsyncCommandManagerSettings"/>.
+        /// Default value for <see cref="IManagerSettings"/>.
         /// </summary>
-        class AsyncCommandManagerSettings : IAsyncCommandManagerSettings
+        class CommandManagerSettings : IManagerSettings
         {
             /// <summary>
             /// Verify CanExecute allows execution before invoking a command.
@@ -86,58 +87,58 @@ namespace AlinSpace.Commands
         }
 
         /// <summary>
-        /// Get execution groups to lock for the given execution group.
+        /// Get groups to lock for the given group.
         /// </summary>
-        /// <param name="executionGroup">Execition group.</param>
-        /// <returns>Enumerable of execution groups that shall be locked.</returns>
-        IEnumerable<ExecutionGroup> GetExecutionGroupsToLock(ExecutionGroup executionGroup)
+        /// <param name="group">Group.</param>
+        /// <returns>Enumerable of groups that shall be locked.</returns>
+        IEnumerable<Group> GetGroupsToLock(Group group)
         {
-            if (executionGroup.Lock == GroupLockBehavior.LockNothing)
-                return new ExecutionGroup[] { };
+            if (group.Lock == GroupLockBehavior.LockNothing)
+                return new Group[] { };
 
-            if (executionGroup.Lock == GroupLockBehavior.LockThisGroup)
-                return new ExecutionGroup[] { executionGroup };
+            if (group.Lock == GroupLockBehavior.LockThisGroup)
+                return new Group[] { group };
 
-            IList<ExecutionGroup> executionGroupsToLock = new List<ExecutionGroup>();
+            IList<Group> groupsToLock = new List<Group>();
 
             foreach (var ex in executionGroups)
             {
-                if (ReferenceEquals(ex, executionGroup))
+                if (ReferenceEquals(ex, group))
                 {
-                    if (executionGroup.Lock == GroupLockBehavior.LockAllOtherGroups)
+                    if (group.Lock == GroupLockBehavior.LockAllOtherGroups)
                         continue;
                 }
 
-                executionGroupsToLock.Add(ex);
+                groupsToLock.Add(ex);
             }
 
-            return executionGroupsToLock;
+            return groupsToLock;
         }
 
         #region Locking / Unlocking
 
         /// <summary>
-        /// Lock execution group.
+        /// Lock group.
         /// </summary>
-        /// <param name="executionGroup">Execution group to lock.</param>
-        void LockExecutionGroup(ExecutionGroup executionGroup)
+        /// <param name="group">Group to lock.</param>
+        void LockGroup(Group group)
         {
-            var groups = GetExecutionGroupsToLock(executionGroup);
+            var groups = GetGroupsToLock(group);
 
-            groups.ForEach(group => Interlocked.Increment(ref group.LockedCounter));
-            groups.ForEach(group => RaiseCanExecuteChangedForExecutionGroup(group));
+            groups.ForEach(x => Interlocked.Increment(ref x.LockedCounter));
+            groups.ForEach(x => RaiseCanExecuteChangedForExecutionGroup(x));
         }
 
         /// <summary>
-        /// Unlock execution group.
+        /// Unlock group.
         /// </summary>
-        /// <param name="executionGroup">Execution group to unlock.</param>
-        void UnlockExecutionGroup(ExecutionGroup executionGroup)
+        /// <param name="group">Group to unlock.</param>
+        void UnlockGroup(Group group)
         {
-            var groups = GetExecutionGroupsToLock(executionGroup);
+            var groups = GetGroupsToLock(group);
 
-            groups.ForEach(group => Interlocked.Decrement(ref group.LockedCounter));
-            groups.ForEach(group => RaiseCanExecuteChangedForExecutionGroup(group));
+            groups.ForEach(x => Interlocked.Decrement(ref x.LockedCounter));
+            groups.ForEach(x => RaiseCanExecuteChangedForExecutionGroup(x));
         }
 
         #endregion
@@ -146,7 +147,7 @@ namespace AlinSpace.Commands
         /// Raise CanExecuteChanged for the given execution group.
         /// </summary>
         /// <param name="executionGroup">Execution group.</param>
-        void RaiseCanExecuteChangedForExecutionGroup(ExecutionGroup executionGroup)
+        void RaiseCanExecuteChangedForExecutionGroup(Group executionGroup)
         {
             foreach (var executionGroupCommand in executionGroup.Commands)
             {
@@ -172,10 +173,10 @@ namespace AlinSpace.Commands
         /// <param name="command">Execution group command.</param>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>True, if the command can execute; false otherwise.</returns>
-        bool CanExecuteCommandFromExecutionGroup(ExecutionGroupCommand command, object parameter)
+        bool CanExecuteCommandFromGroup(GroupCommand command, object parameter)
         {
             // Check if execution group allows the command to execute.
-            if (command.ExecutionGroup.LockedCounter > 0)
+            if (command.Group.LockedCounter > 0)
                 return false;
 
             // Check if we should ignore the individual can execute method.
@@ -203,7 +204,7 @@ namespace AlinSpace.Commands
         /// <param name="command">Execution group command.</param>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>Task.</returns>
-        async Task ExecuteCommandFromExecutionGroupAsync(ExecutionGroupCommand command, object parameter)
+        async Task ExecuteCommandFromGroupAsync(GroupCommand command, object parameter)
         {
             if (settings.VerifyCanExecuteBeforeExecution)
             {
@@ -213,7 +214,7 @@ namespace AlinSpace.Commands
 
             try
             {
-                LockExecutionGroup(command.ExecutionGroup);
+                LockGroup(command.Group);
 
                 await command.OriginalCommand
                     .ExecuteAsync(parameter)
@@ -228,7 +229,7 @@ namespace AlinSpace.Commands
             }
             finally
             {
-                UnlockExecutionGroup(command.ExecutionGroup);
+                UnlockGroup(command.Group);
             }
         }
 
@@ -237,9 +238,9 @@ namespace AlinSpace.Commands
         /// <summary>
         /// Execution group.
         /// </summary>
-        class ExecutionGroup : IAsyncCommandGroup
+        class Group : IGroupRegistrator
         {
-            readonly AsyncCommandManager commandManager;
+            readonly Manager manager;
 
             /// <summary>
             /// Execution lock.
@@ -259,9 +260,9 @@ namespace AlinSpace.Commands
             /// <summary>
             /// Constructor.
             /// </summary>
-            public ExecutionGroup(AsyncCommandManager commandManager, GroupLockBehavior @lock)
+            public Group(Manager manager, GroupLockBehavior @lock)
             {
-                this.commandManager = commandManager;
+                this.manager = manager;
                 Lock = @lock;
             }
 
@@ -270,22 +271,22 @@ namespace AlinSpace.Commands
             /// </summary>
             /// <param name="command">Command to register.</param>
             /// <returns>Registered command.</returns>
-            public IAsyncCommand Register(IAsyncCommand command)
+            public ICommand Register(ICommand command)
             {
-                var executionGroupCommand = new ExecutionGroupCommand(
-                    commandManager: commandManager,
-                    executionGroup: this,
+                var groupCommand = new GroupCommand(
+                    manager: manager,
+                    group: this,
                     originalCommand: command);
 
-                Commands.Add(executionGroupCommand);
-                return executionGroupCommand;
+                Commands.Add(groupCommand);
+                return groupCommand;
             }
         }
 
         /// <summary>
         /// Can execute changed command.
         /// </summary>
-        interface ICanExecuteChangedCommand : IAsyncCommand
+        interface ICanExecuteChangedCommand : ICommand
         {
             /// <summary>
             /// Raise can execute changed.
@@ -294,32 +295,32 @@ namespace AlinSpace.Commands
         }
 
         /// <summary>
-        /// Execution group command.
+        /// Group command.
         /// </summary>
-        class ExecutionGroupCommand : ICanExecuteChangedCommand
+        class GroupCommand : ICanExecuteChangedCommand
         {
-            readonly AsyncCommandManager commandManager;
+            readonly Manager manager;
 
             /// <summary>
             /// Execution group.
             /// </summary>
-            public ExecutionGroup ExecutionGroup { get; }
+            public Group Group { get; }
 
             /// <summary>
             /// Original command.
             /// </summary>
-            public IAsyncCommand OriginalCommand { get; }
+            public ICommand OriginalCommand { get; }
 
             /// <summary>
             /// Constructor.
             /// </summary>
-            public ExecutionGroupCommand(
-                AsyncCommandManager commandManager,
-                ExecutionGroup executionGroup,
-                IAsyncCommand originalCommand)
+            public GroupCommand(
+                Manager manager,
+                Group group,
+                ICommand originalCommand)
             {
-                this.commandManager = commandManager;
-                ExecutionGroup = executionGroup;
+                this.manager = manager;
+                Group = group;
                 OriginalCommand = originalCommand;
 
                 OriginalCommand.CanExecuteChanged += (s, e) => RaiseCanExecuteChanged();
@@ -341,7 +342,7 @@ namespace AlinSpace.Commands
                 }
                 catch (Exception)
                 {
-                    if (commandManager.settings.IgnoreExceptionsFromCommands)
+                    if (manager.settings.IgnoreExceptionsFromCommands)
                         return;
 
                     throw;
@@ -355,7 +356,7 @@ namespace AlinSpace.Commands
             /// <returns>True, if command can execute; false otherwise.</returns>
             public bool CanExecute(object parameter)
             {
-                return commandManager.CanExecuteCommandFromExecutionGroup(this, parameter);
+                return manager.CanExecuteCommandFromGroup(this, parameter);
             }
 
             /// <summary>
@@ -365,15 +366,15 @@ namespace AlinSpace.Commands
             /// <returns>Task.</returns>
             public Task ExecuteAsync(object parameter = null)
             {
-                return commandManager.ExecuteCommandFromExecutionGroupAsync(this, parameter);
+                return manager.ExecuteCommandFromGroupAsync(this, parameter);
             }
 
             /// <summary>
-            /// Implicit convertion to command.
+            /// Implicit convertion to windows command.
             /// </summary>
-            public static implicit operator AsyncCommandToCommand(ExecutionGroupCommand command)
+            public static implicit operator ToWindowsCommand(GroupCommand command)
             {
-                return new AsyncCommandToCommand(command);
+                return new ToWindowsCommand(command);
             }
         }
 

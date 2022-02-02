@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AlinSpace.Commands
+namespace AlinSpace.Command
 {
     /// <summary>
-    /// Default implementation of <see cref="IAsyncCommand"/>.
+    /// Default implementation of <see cref="ICommand"/>.
     /// </summary>
-    public class AsyncCommand : AbstractAsyncCommand
+    public class Command : AbstractCommand
     {
         readonly bool verifyCanExecuteBeforeExecution;
         readonly bool continueOnCapturedContext;
@@ -24,11 +24,11 @@ namespace AlinSpace.Commands
         /// This flag indicates whether or not the command shall be executed on the captured context.
         /// </param>
         /// <returns>Async command.</returns>
-        public static AsyncCommand New(
+        public static Command New(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
-            return new AsyncCommand(
+            return new Command(
                 verifyCanExecuteBeforeExecution,
                 continueOnCapturedContext);
         }
@@ -42,7 +42,7 @@ namespace AlinSpace.Commands
         /// <param name="continueOnCapturedContext">
         /// This flag indicates whether or not the command shall be executed on the captured context.
         /// </param>
-        public AsyncCommand(
+        public Command(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
@@ -55,7 +55,7 @@ namespace AlinSpace.Commands
         /// </summary>
         /// <param name="executeFunc"></param>
         /// <returns>Async command.</returns>
-        public AsyncCommand OnCanExecute(Func<object, bool> canExecuteFunc)
+        public Command OnCanExecute(Func<object, bool> canExecuteFunc)
         {
             this.canExecuteFunc = canExecuteFunc;
             return this;
@@ -66,7 +66,7 @@ namespace AlinSpace.Commands
         /// </summary>
         /// <param name="executeAction"></param>
         /// <returns>Async command.</returns>
-        public AsyncCommand OnExecuteAsync(Func<object, Task> executeFunc)
+        public Command OnExecuteAsync(Func<object, Task> executeFunc)
         {
             this.executeFunc = executeFunc;
             return this;

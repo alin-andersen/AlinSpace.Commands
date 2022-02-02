@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xunit;
 
-namespace AlinSpace.Commands.Tests
+namespace AlinSpace.Command.Tests
 {
     /// <summary>
     /// Tests for <see cref="AsyncCommandManager"/>.
@@ -28,7 +28,7 @@ namespace AlinSpace.Commands.Tests
         {
             // Setup
 
-            var commandMock = new Mock<IFluentCommand>();
+            var commandMock = new Mock<ICommand>();
             commandMock
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -36,9 +36,9 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.CompletedTask);
 
-            IFluentCommand command = null;
+            ICommand command = null;
 
-            AsyncCommandManager
+            Manager
                 .New()
                 .AddGroup(eg => command = eg.Register(commandMock.Object));
 
@@ -76,7 +76,7 @@ namespace AlinSpace.Commands.Tests
 
             var tcs = new TaskCompletionSource<object>();
 
-            var commandMockA = new Mock<IFluentCommand>();
+            var commandMockA = new Mock<ICommand>();
             commandMockA
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -84,7 +84,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(tcs.Task);
 
-            var commandMockB = new Mock<IFluentCommand>();
+            var commandMockB = new Mock<ICommand>();
             commandMockB
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -92,10 +92,10 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            IFluentCommand commandA = null;
-            IFluentCommand commandB = null;
+            ICommand commandA = null;
+            ICommand commandB = null;
 
-            AsyncCommandManager
+            Manager
                 .New()
                 .AddGroup(eg =>
                 {
@@ -142,7 +142,7 @@ namespace AlinSpace.Commands.Tests
 
             var tcs = new TaskCompletionSource<object>();
 
-            var commandMockA = new Mock<IFluentCommand>();
+            var commandMockA = new Mock<ICommand>();
             commandMockA
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -150,7 +150,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(tcs.Task);
 
-            var commandMockB = new Mock<IFluentCommand>();
+            var commandMockB = new Mock<ICommand>();
             commandMockB
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -158,10 +158,10 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            IFluentCommand commandA = null;
-            IFluentCommand commandB = null;
+            ICommand commandA = null;
+            ICommand commandB = null;
 
-            AsyncCommandManager
+            Manager
                 .New()
                 .AddGroup(eg => commandA = eg.Register(commandMockA.Object))
                 .AddGroup(eg => commandB = eg.Register(commandMockB.Object));
@@ -207,7 +207,7 @@ namespace AlinSpace.Commands.Tests
 
             var tcs = new TaskCompletionSource<object>();
 
-            var commandMockA = new Mock<IFluentCommand>();
+            var commandMockA = new Mock<ICommand>();
             commandMockA
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -215,7 +215,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(tcs.Task);
 
-            var commandMockB = new Mock<IFluentCommand>();
+            var commandMockB = new Mock<ICommand>();
             commandMockB
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -223,7 +223,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            var commandMockC = new Mock<IFluentCommand>();
+            var commandMockC = new Mock<ICommand>();
             commandMockC
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -231,11 +231,11 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            IFluentCommand commandA = null;
-            IFluentCommand commandB = null;
-            IFluentCommand commandC = null;
+            ICommand commandA = null;
+            ICommand commandB = null;
+            ICommand commandC = null;
 
-            AsyncCommandManager
+            Manager
                 .New()
                 .AddGroup(eg => commandA = eg.Register(commandMockA.Object))
                 .AddGroup(eg => commandB = eg.Register(commandMockB.Object))
@@ -288,7 +288,7 @@ namespace AlinSpace.Commands.Tests
 
             var tcs = new TaskCompletionSource<object>();
 
-            var commandMockA = new Mock<IFluentCommand>();
+            var commandMockA = new Mock<ICommand>();
             commandMockA
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -296,7 +296,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(tcs.Task);
 
-            var commandMockB = new Mock<IFluentCommand>();
+            var commandMockB = new Mock<ICommand>();
             commandMockB
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -304,7 +304,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            var commandMockC = new Mock<IFluentCommand>();
+            var commandMockC = new Mock<ICommand>();
             commandMockC
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -312,11 +312,11 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            IFluentCommand commandA = null;
-            IFluentCommand commandB = null;
-            IFluentCommand commandC = null;
+            ICommand commandA = null;
+            ICommand commandB = null;
+            ICommand commandC = null;
 
-            AsyncCommandManager
+            Manager
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),
@@ -372,7 +372,7 @@ namespace AlinSpace.Commands.Tests
 
             var tcs = new TaskCompletionSource<object>();
 
-            var commandMockA = new Mock<IFluentCommand>();
+            var commandMockA = new Mock<ICommand>();
             commandMockA
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -380,7 +380,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(tcs.Task);
 
-            var commandMockB = new Mock<IFluentCommand>();
+            var commandMockB = new Mock<ICommand>();
             commandMockB
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -388,7 +388,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            var commandMockC = new Mock<IFluentCommand>();
+            var commandMockC = new Mock<ICommand>();
             commandMockC
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -396,11 +396,11 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            IFluentCommand commandA = null;
-            IFluentCommand commandB = null;
-            IFluentCommand commandC = null;
+            ICommand commandA = null;
+            ICommand commandB = null;
+            ICommand commandC = null;
 
-            AsyncCommandManager
+            Manager
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),
@@ -455,7 +455,7 @@ namespace AlinSpace.Commands.Tests
 
             var tcs = new TaskCompletionSource<object>();
 
-            var commandMockA = new Mock<IFluentCommand>();
+            var commandMockA = new Mock<ICommand>();
             commandMockA
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -463,7 +463,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(tcs.Task);
 
-            var commandMockB = new Mock<IFluentCommand>();
+            var commandMockB = new Mock<ICommand>();
             commandMockB
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -471,7 +471,7 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            var commandMockC = new Mock<IFluentCommand>();
+            var commandMockC = new Mock<ICommand>();
             commandMockC
                 .Setup(m => m.CanExecute(It.Is<object>(v => v == null)))
                 .Returns(true);
@@ -479,11 +479,11 @@ namespace AlinSpace.Commands.Tests
                 .Setup(m => m.ExecuteAsync(It.Is<object>(v => v == null)))
                 .Returns(Task.Delay(-1));
 
-            IFluentCommand commandA = null;
-            IFluentCommand commandB = null;
-            IFluentCommand commandC = null;
+            ICommand commandA = null;
+            ICommand commandB = null;
+            ICommand commandC = null;
 
-            AsyncCommandManager
+            Manager
                 .New()
                 .AddGroup(
                     eg => commandA = eg.Register(commandMockA.Object),

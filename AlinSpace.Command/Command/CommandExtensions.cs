@@ -1,22 +1,21 @@
 ﻿using System.Threading.Tasks;
-using System.Windows.Input;
 
-namespace AlinSpace.Commands
+namespace AlinSpace.Command
 {
     /// <summary>
-    /// Extensions for <see cref="IAsyncCommand"/>.
+    /// Extensions for <see cref="ICommand"/>.
     /// </summary>
-    public static class AsyncCommandExtensions
+    public static class CommandExtensions
     {
         /// <summary>
-        /// Convert to <see cref="ICommand"/>.
+        /// Convert to <see cref="global::System.Windows.Input.ICommand"/>.
         /// </summary>
         /// <param name="asyncCommand">Async command to convert.</param>
         /// <param name="fireAndForgetOnExecution">Flag indicates whether or not the async command shall be fire and forget on execution.</param>
-        /// <returns>Command.</returns>
-        public static ICommand ToCommand(this IAsyncCommand asyncCommand, bool fireAndForgetOnExecution = true)
+        /// <returns>Windows command.</returns>
+        public static global::System.Windows.Input.ICommand ToWindowsCommand(this ICommand asyncCommand, bool fireAndForgetOnExecution = true)
         {
-            return new AsyncCommandToCommand(asyncCommand, fireAndForgetOnExecution);
+            return new ToWindowsCommand(asyncCommand, fireAndForgetOnExecution);
         }
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace AlinSpace.Commands
         /// <param name="callCanExecuteBeforeExecution">Call CanExecute before command execution.</param>
         /// <param name="ignoreExceptions">Ignore exceptions from command.</param>
         public static async Task SafeExecuteAsync(
-            this IAsyncCommand asyncCommand,
+            this ICommand asyncCommand,
             object parameter = null,
             bool callCanExecuteBeforeExecution = true,
             bool ignoreExceptions = true)
@@ -60,7 +59,7 @@ namespace AlinSpace.Commands
         /// <param name="callCanExecuteBeforeExecution">Call CanExecute before command execution.</param>
         /// <param name="ignoreExceptions">Ignore exceptions from command.</param>
         public static void SafeExecute(
-            this ICommand command,
+            this global::System.Windows.Input.ICommand command,
             object parameter = null,
             bool callCanExecuteBeforeExecution = true,
             bool ignoreExceptions = true)

@@ -1,4 +1,4 @@
-﻿namespace AlinSpace.Commands.Tests
+﻿namespace AlinSpace.Command.Tests
 {
     /// <summary>
     /// Tests for <see cref="AbstractFluentCommand"/> and <see cref="AbstractFluentCommand{TParameter}"/>.

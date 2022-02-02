@@ -1,4 +1,4 @@
-﻿namespace AlinSpace.Commands
+﻿namespace AlinSpace.Command
 {
     /// <summary>
     /// Group lock behaviour.

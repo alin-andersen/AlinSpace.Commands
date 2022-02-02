@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 
-namespace AlinSpace.Commands
+namespace AlinSpace.Command
 {
     /// <summary>
     /// Represents a generic asynchronous command interface.
     /// </summary>
-    public interface IAsyncCommand<TParameter> : IAsyncCommand
+    public interface ICommand<TParameter> : ICommand
     {
         /// <summary>
         /// Can command execute.

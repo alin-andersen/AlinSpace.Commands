@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 
-namespace AlinSpace.Commands
+namespace AlinSpace.Command
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IAsyncCommand{TParameter}"/>.
+    /// Abstract implementation of <see cref="ICommand{TParameter}"/>.
     /// </summary>
-    public abstract class AbstractAsyncCommand<TParameter> : AbstractAsyncCommand
+    public abstract class AbstractCommand<TParameter> : AbstractCommand
     {
         /// <summary>
         /// Can command execute.

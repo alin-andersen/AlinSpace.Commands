@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AlinSpace.Commands
+namespace AlinSpace.Command
 {
     /// <summary>
-    /// Represents an asynchronous command interface.
+    /// Abstract implementation of <see cref="ICommand"/>.
     /// </summary>
-    public interface IAsyncCommand
+    public abstract class AbstractCommand : ICommand
     {
         /// <summary>
         /// Can execute changed.
@@ -14,19 +14,30 @@ namespace AlinSpace.Commands
         /// <remarks>
         /// Raised when <see cref="CanExecute(object)"/> changes.
         /// </remarks>
-        event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged = delegate { };
+
+        /// <summary>
+        /// Raises <see cref="CanExecuteChanged"/>.
+        /// </summary>
+        protected void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged(this, EventArgs.Empty);
+        }
 
         /// <summary>
         /// Can command execute.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>True, if command can be executed; false otherwise.</returns>
-        bool CanExecute(object parameter = null);
+        public virtual bool CanExecute(object parameter = null)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Execute command asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        Task ExecuteAsync(object parameter = null);
+        public abstract Task ExecuteAsync(object parameter = null);
     }
 }
