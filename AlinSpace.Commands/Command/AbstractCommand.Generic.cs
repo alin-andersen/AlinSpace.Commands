@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AlinSpace.Command
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Abstract implementation of <see cref="ICommand{TParameter}"/>.

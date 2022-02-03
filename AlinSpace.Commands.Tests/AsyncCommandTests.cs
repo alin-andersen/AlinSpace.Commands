@@ -1,11 +1,11 @@
 ﻿using Xunit;
 
-namespace AlinSpace.Command.Tests
+namespace AlinSpace.Commands.Tests
 {
     /// <summary>
-    /// Tests for <see cref="FluentCommand"/> and <see cref="FluentCommand{TParameter}"/>.
+    /// Tests for <see cref="Command"/> and <see cref="Command{TParameter}"/>.
     /// </summary>
-    public class AsyncCommandTests
+    public class CommandTests
     {
         /// <summary>
         /// Tests no execution.

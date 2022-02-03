@@ -1,15 +1,14 @@
 ﻿using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Xunit;
 
-namespace AlinSpace.Command.Tests
+namespace AlinSpace.Commands.Tests
 {
     /// <summary>
-    /// Tests for <see cref="AsyncCommandManager"/>.
+    /// Tests for <see cref="Manager"/>.
     /// </summary>
-    public class AsyncCommandManagerTests
+    public class ManagerTests
     {
         /// <summary>
         /// Tests that the command manager will block commands as expected.

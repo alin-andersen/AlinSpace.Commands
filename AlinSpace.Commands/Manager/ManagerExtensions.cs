@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AlinSpace.Command
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Extensions for <see cref="IAsyncCommandManager"/>.

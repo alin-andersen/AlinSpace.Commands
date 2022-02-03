@@ -1,22 +1,25 @@
 ﻿using System;
-using System.Threading.Tasks;
 
-namespace AlinSpace.Command
+namespace AlinSpace.Commands
 {
     /// <summary>
-    /// <see cref="System.Windows.Input.ICommand"/> to <see cref="ICommand"/>.
+    /// <see cref="AsyncCommand"/> to <see cref="System.Windows.Input.ICommand"/>.
     /// </summary>
-    public class ToCommand : ICommand
+    public class ToWindowsCommand : global::System.Windows.Input.ICommand
     {
-        readonly global::System.Windows.Input.ICommand command;
+        private readonly ICommand command;
+        private readonly bool fireAndForgetOnExecution;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="command">Command.</param>
-        public ToCommand(global::System.Windows.Input.ICommand command)
+        /// <param name="command">Async command.</param>
+        /// <param name="fireAndForgetOnExecution">Flag indicates whether or not the async command shall be fire and forget on execution.</param>
+        public ToWindowsCommand(ICommand command, bool fireAndForgetOnExecution = true)
         {
             this.command = command ?? throw new ArgumentNullException(nameof(command));
+            this.fireAndForgetOnExecution = fireAndForgetOnExecution;
+
             command.CanExecuteChanged += (sender, args) => CanExecuteChanged(sender, args);
         }
 
@@ -39,14 +42,15 @@ namespace AlinSpace.Command
         }
 
         /// <summary>
-        /// Execute command asynchronously.
+        /// Execute command.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        /// <returns>Task.</returns>
-        public Task ExecuteAsync(object parameter = null)
+        public void Execute(object parameter = null)
         {
-            command.Execute(parameter);
-            return Task.CompletedTask;
+            var task = command.ExecuteAsync(parameter);
+
+            if (!fireAndForgetOnExecution)
+                task.Wait();
         }
     }
 }

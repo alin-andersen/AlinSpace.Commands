@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AlinSpace.Command\AlinSpace.Command.csproj" />
+    <ProjectReference Include="..\AlinSpace.Commands\AlinSpace.Commands.csproj" />
   </ItemGroup>
 
 </Project>

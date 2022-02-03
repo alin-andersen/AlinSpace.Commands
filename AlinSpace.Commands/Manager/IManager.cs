@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AlinSpace.Command
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Represents the commang manager interface.

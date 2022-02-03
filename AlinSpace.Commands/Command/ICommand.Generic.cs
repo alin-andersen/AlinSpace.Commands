@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AlinSpace.Command
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Represents a generic asynchronous command interface.

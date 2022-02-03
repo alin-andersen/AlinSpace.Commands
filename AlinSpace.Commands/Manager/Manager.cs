@@ -1,10 +1,9 @@
-﻿using AlinSpace.System;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AlinSpace.Command
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Default implementation of <see cref="IManager"/>.

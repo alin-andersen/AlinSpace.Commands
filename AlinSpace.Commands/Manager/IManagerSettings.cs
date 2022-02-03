@@ -1,4 +1,4 @@
-﻿namespace AlinSpace.Command
+﻿namespace AlinSpace.Commands
 {
     /// <summary>
     /// Settings for <see cref="IManager"/>.

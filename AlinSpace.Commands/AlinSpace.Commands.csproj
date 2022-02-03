@@ -6,19 +6,19 @@
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <PackageTags>alin space, alinspace, alin, space, fluent, fluent commands, command, commands, command manager</PackageTags>
-    <PackageProjectUrl>https://github.com/onixion/AlinSpace.Command</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/onixion/AlinSpace.Commands</PackageProjectUrl>
     <Copyright>Copyright © 2021 Alin Andersen</Copyright>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/onixion/AlinSpace.Command</RepositoryUrl>
-    <PackageId>AlinSpace.Command</PackageId>
+    <RepositoryUrl>https://github.com/onixion/AlinSpace.Commands</RepositoryUrl>
+    <PackageId>AlinSpace.Commands</PackageId>
     <Authors>Alin Andersen</Authors>
     <Product>AlinSpace.Command</Product>
     <Description>Pure asynchronous command implementation and powerful command manager.</Description>
-    <AssemblyVersion>6.0.0</AssemblyVersion>
-    <FileVersion>6.0.0</FileVersion>
-    <Version>6.0.0</Version>
+    <AssemblyVersion>6.0.5</AssemblyVersion>
+    <FileVersion>6.0.5</FileVersion>
+    <Version>6.0.5</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIconUrl />
   </PropertyGroup>
@@ -35,6 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AlinSpace.System" Version="6.0.0" />
+    <PackageReference Include="AlinSpace" Version="6.0.0" />
   </ItemGroup>
 </Project>
