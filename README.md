@@ -1,7 +1,7 @@
 <img src="https://github.com/onixion/AlinSpace.Commands/blob/main/Assets/Icon.png" width="200" height="200">
 
-# AlinSpace.Command
-[![NuGet version (AlinSpace.Command)](https://img.shields.io/nuget/v/AlinSpace.Command.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.Command/)
+# AlinSpace.Commands
+[![NuGet version (AlinSpace.Commands)](https://img.shields.io/nuget/v/AlinSpace.Commands.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.Commands/)
 
 A simple library offering asynchronous command and powerful command manager.
 
