@@ -5,14 +5,14 @@
 
 A simple library offering asynchronous command and powerful command manager.
 
-The *AlinSpace.Command.ICommand* interface is very similar to the *System.Windows.Input.ICommand* interface, but they are **not** the same.
-The *AlinSpace.Command.ICommand* interface is a fully asynchronous command interface, whereas *System.Windows.Input.ICommand* is **not**.
+The *AlinSpace.Commands.ICommand* interface is very similar to the *System.Windows.Input.ICommand* interface, but they are **not** the same.
+The *AlinSpace.Commands.ICommand* interface is a fully asynchronous command interface, whereas *System.Windows.Input.ICommand* is **not**.
 
-[NuGet package](https://www.nuget.org/packages/AlinSpace.Command/)
+[NuGet package](https://www.nuget.org/packages/AlinSpace.Commands/)
 
-## Examples - *AlinSpace.Command.Command*
+## Examples - *AlinSpace.Commands.Command*
 
-This is the *AlinSpace.Command.Command*:
+This is the *AlinSpace.Commands.Command*:
 
  ```csharp
 var command = Command
@@ -27,9 +27,9 @@ var genericCommand = Command
     
 ```
 
-## Examples - *AlinSpace.Command.AbstractCommand*
+## Examples - *AlinSpace.Commands.AbstractCommand*
 
-This is the *AlinSpace.Command.AbstractCommand*:
+This is the *AlinSpace.Commands.AbstractCommand*:
 
  ```csharp
 public class MyCommand : AbstractCommand
@@ -53,9 +53,9 @@ public class MyGenericCommand<int> : AbstractCommand
 }
 ```
 
-## Examples - *AlinSpace.Command.Manager*
+## Examples - *AlinSpace.Commands.Manager*
 
-The *AlinSpace.Command.Manager* allows to create *command groups*. 
+The *AlinSpace.Commands.Manager* allows to create *command groups*. 
 Command groups dictate the availability of command execution.
 Commands are registered to one command group.
 When registering a *ICommand* to a group, it will return an *ICommand* instance.
