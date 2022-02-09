@@ -7,7 +7,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>alin space, alinspace, alin, space, fluent, fluent commands, command, commands, command manager</PackageTags>
     <PackageProjectUrl>https://github.com/onixion/AlinSpace.Commands</PackageProjectUrl>
-    <Copyright>Copyright © 2021 Alin Andersen</Copyright>
+    <Copyright>Copyright © 2022 Alin Andersen</Copyright>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -16,9 +16,9 @@
     <Authors>Alin Andersen</Authors>
     <Product>AlinSpace.Command</Product>
     <Description>Pure asynchronous command implementation and powerful command manager.</Description>
-    <AssemblyVersion>6.0.5</AssemblyVersion>
-    <FileVersion>6.0.5</FileVersion>
-    <Version>6.0.5</Version>
+    <AssemblyVersion>6.0.6</AssemblyVersion>
+    <FileVersion>6.0.6</FileVersion>
+    <Version>6.0.6</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIconUrl />
   </PropertyGroup>
