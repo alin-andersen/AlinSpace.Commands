@@ -3,7 +3,7 @@
 namespace AlinSpace.Commands
 {
     /// <summary>
-    /// Represents a generic asynchronous command interface.
+    /// Represents the generic asynchronous command interface.
     /// </summary>
     public interface ICommand<TParameter> : ICommand
     {

@@ -1,4 +1,6 @@
-﻿namespace AlinSpace.Commands
+﻿using System;
+
+namespace AlinSpace.Commands
 {
     /// <summary>
     /// Represents the group registrator.

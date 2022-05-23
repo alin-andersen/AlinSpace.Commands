@@ -49,7 +49,7 @@ namespace AlinSpace.Commands.Tests
 
             command.Should().NotBeNull();
 
-            commandMock.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Never);
+            commandMock.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Once);
             commandMock.Verify(m => m.ExecuteAsync(It.Is<object>(v => v == null)), Times.Once);
 
             command.CanExecute(null).Should().BeTrue();
@@ -109,7 +109,7 @@ namespace AlinSpace.Commands.Tests
             // Assert
 
             commandA.Should().NotBeNull();
-            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Never);
+            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Once);
             commandMockA.Verify(m => m.ExecuteAsync(It.Is<object>(v => v == null)), Times.Once);
 
             commandB.Should().NotBeNull();
@@ -172,7 +172,7 @@ namespace AlinSpace.Commands.Tests
             // Assert
 
             commandA.Should().NotBeNull();
-            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Never);
+            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Once);
             commandMockA.Verify(m => m.ExecuteAsync(It.Is<object>(v => v == null)), Times.Once);
 
             commandB.Should().NotBeNull();
@@ -247,7 +247,7 @@ namespace AlinSpace.Commands.Tests
             // Assert
 
             commandA.Should().NotBeNull();
-            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Never);
+            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Once);
             commandMockA.Verify(m => m.ExecuteAsync(It.Is<object>(v => v == null)), Times.Once);
 
             commandB.Should().NotBeNull();
@@ -330,7 +330,7 @@ namespace AlinSpace.Commands.Tests
             // Assert
 
             commandA.Should().NotBeNull();
-            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Never);
+            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Once);
             commandMockA.Verify(m => m.ExecuteAsync(It.Is<object>(v => v == null)), Times.Once);
             commandA.CanExecute(null).Should().BeTrue("Command A should NOT block itself.");
 
@@ -414,7 +414,7 @@ namespace AlinSpace.Commands.Tests
             // Assert
 
             commandA.Should().NotBeNull();
-            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Never);
+            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Once);
             commandMockA.Verify(m => m.ExecuteAsync(It.Is<object>(v => v == null)), Times.Once);
             commandA.CanExecute(null).Should().BeTrue("Command A should not block itself.");
 
@@ -497,7 +497,7 @@ namespace AlinSpace.Commands.Tests
             // Assert
 
             commandA.Should().NotBeNull();
-            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Never);
+            commandMockA.Verify(m => m.CanExecute(It.Is<object>(v => v == null)), Times.Once);
             commandMockA.Verify(m => m.ExecuteAsync(It.Is<object>(v => v == null)), Times.Once);
             commandA.CanExecute(null).Should().BeTrue("Command A should not block itself.");
 

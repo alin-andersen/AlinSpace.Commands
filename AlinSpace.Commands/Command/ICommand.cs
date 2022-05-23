@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace AlinSpace.Commands
 {
     /// <summary>
-    /// Represents an asynchronous command interface.
+    /// Represents the asynchronous command interface.
     /// </summary>
     public interface ICommand
     {

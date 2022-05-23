@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace AlinSpace.Commands
 {
@@ -21,28 +22,28 @@ namespace AlinSpace.Commands
         /// <summary>
         /// Save execute command asynchronously.
         /// </summary>
-        /// <param name="asyncCommand">Async command to execute safely.</param>
+        /// <param name="command">Async command to execute safely.</param>
         /// <param name="parameter">Command parameter.</param>
         /// <param name="callCanExecuteBeforeExecution">Call CanExecute before command execution.</param>
         /// <param name="ignoreExceptions">Ignore exceptions from command.</param>
         public static async Task SafeExecuteAsync(
-            this ICommand asyncCommand,
+            this ICommand command,
             object parameter = null,
             bool callCanExecuteBeforeExecution = true,
             bool ignoreExceptions = true)
         {
-            if (asyncCommand == null)
-                return;
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
 
             try
             {
                 if (callCanExecuteBeforeExecution)
                 {
-                    if (asyncCommand.CanExecute(parameter))
+                    if (command.CanExecute(parameter))
                         return;
                 }
 
-                await asyncCommand.ExecuteAsync(parameter);
+                await command.ExecuteAsync(parameter);
             }
             catch
             {
@@ -65,7 +66,7 @@ namespace AlinSpace.Commands
             bool ignoreExceptions = true)
         {
             if (command == null)
-                return;
+                throw new ArgumentNullException(nameof(command));
 
             try
             {

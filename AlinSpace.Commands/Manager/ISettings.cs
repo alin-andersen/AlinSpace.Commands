@@ -3,26 +3,31 @@
     /// <summary>
     /// Settings for <see cref="IManager"/>.
     /// </summary>
-    public interface IManagerSettings
+    public interface ISettings
     {
+        /// <summary>
+        /// Raises can execute changed for all groups after execution of any command.
+        /// </summary>
+        bool RaiseCanExecuteAfterExecutionForAllGroups { get; set; }
+
         /// <summary>
         /// Verify CanExecute allows execution before invoking a command.
         /// </summary>
-        bool VerifyCanExecuteBeforeExecution { set; }
+        bool VerifyCanExecuteBeforeExecution { get; set; }
 
         /// <summary>
         /// Ignore CanExecute of all commands.
         /// </summary>
-        bool IgnoreIndividualCanExecute { set; }
+        bool IgnoreIndividualCanExecute { get; set; }
 
         /// <summary>
         /// Ignore exceptions thrown from commands.
         /// </summary>
-        bool IgnoreExceptionsFromCommands { set; }
+        bool IgnoreExceptionsFromCommands { get; set; }
 
         /// <summary>
         /// Continue on captured context.
         /// </summary>
-        bool ContinueOnCapturedContext { set; }
+        bool ContinueOnCapturedContext { get; set; }
     }
 }
