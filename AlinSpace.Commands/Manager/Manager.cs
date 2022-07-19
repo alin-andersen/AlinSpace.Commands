@@ -10,10 +10,7 @@ namespace AlinSpace.Commands
     /// </summary>
     public partial class Manager : IManager
     {
-        /// <summary>
-        /// Settings.
-        /// </summary>
-        readonly CommandManagerSettings settings = new CommandManagerSettings();
+        private readonly ManagerSettings settings = new ManagerSettings();
 
         /// <summary>
         /// Execution groups.
@@ -21,69 +18,43 @@ namespace AlinSpace.Commands
         readonly IList<Group> executionGroups = new List<Group>();
 
         /// <summary>
-        /// Create command manager.
+        /// Constructor.
         /// </summary>
-        /// <param name="settingsCallback">Optional settings callback.</param>
-        /// <returns>Async command manager.</returns>
-        public static Manager New(Action<IManagerSettings> settingsCallback = null)
+        /// <param name="settings">Settings.</param>
+        public Manager(ManagerSettings settings = null)
         {
-            return new Manager(settingsCallback);
+            this.settings = settings ?? new ManagerSettings();
         }
 
         /// <summary>
-        /// Constructor.
+        /// Create new.
         /// </summary>
-        /// <param name="settingsCallback">Optional settings callback.</param>
-        public Manager(Action<IManagerSettings> settingsCallback = null)
+        /// <param name="settings">Settings.</param>
+        /// <returns>Async command manager.</returns>
+        public static Manager New(ManagerSettings settings = null)
         {
-            settingsCallback?.Invoke(settings);
+            return new Manager(settings);
         }
 
         /// <summary>
         /// Add execution group.
         /// </summary>
-        /// <param name="commandRegistrations">Command registrations.</param>
+        /// <param name="commandRegistrationsDelegate">Command registrations delegate.</param>
         /// <param name="lock">Lock.</param>
         /// <returns>Command manager.</returns>
-        public IManager AddGroup(Action<IGroupRegistrator> commandRegistrations, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups)
+        public IManager AddGroup(Action<IGroupRegistrator> commandRegistrationsDelegate, GroupLockBehavior @lock = GroupLockBehavior.LockAllGroups)
         {
             var group = new Group(
                 manager: this,
                 @lock: @lock);
 
-            commandRegistrations(group);
+            commandRegistrationsDelegate(group);
 
             executionGroups.Add(group);
             return this;
         }
 
         #region Internal
-
-        /// <summary>
-        /// Default value for <see cref="IManagerSettings"/>.
-        /// </summary>
-        class CommandManagerSettings : IManagerSettings
-        {
-            /// <summary>
-            /// Verify CanExecute allows execution before invoking a command.
-            /// </summary>
-            public bool VerifyCanExecuteBeforeExecution { get; set; }
-
-            /// <summary>
-            /// Ignore CanExecute of all commands.
-            /// </summary>
-            public bool IgnoreIndividualCanExecute { get; set; }
-
-            /// <summary>
-            /// Ignore exceptions thrown from commands.
-            /// </summary>
-            public bool IgnoreExceptionsFromCommands { get; set; }
-
-            /// <summary>
-            /// Continue on captured context.
-            /// </summary>
-            public bool ContinueOnCapturedContext { get; set; } = true;
-        }
 
         /// <summary>
         /// Get groups to lock for the given group.
@@ -141,6 +112,17 @@ namespace AlinSpace.Commands
         }
 
         #endregion
+
+        /// <summary>
+        /// Raises CanExecuteChanged for all commands.
+        /// </summary>
+        void RaiseCanExecuteChangeForAll()
+        {
+            foreach(var executionGroup in executionGroups)
+            {
+                RaiseCanExecuteChangedForExecutionGroup(executionGroup);
+            }
+        }
 
         /// <summary>
         /// Raise CanExecuteChanged for the given execution group.
@@ -228,6 +210,11 @@ namespace AlinSpace.Commands
             }
             finally
             {
+                if (settings.RaiseCanExecuteChangedOnAllAfterCommandExecution)
+                {
+                    RaiseCanExecuteChangeForAll();
+                }
+
                 UnlockGroup(command.Group);
             }
         }

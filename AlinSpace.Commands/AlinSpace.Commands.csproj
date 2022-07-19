@@ -16,9 +16,7 @@
     <Authors>Alin Andersen</Authors>
     <Product>AlinSpace.Command</Product>
     <Description>Pure asynchronous command implementation and powerful command manager.</Description>
-    <AssemblyVersion>6.0.6</AssemblyVersion>
-    <FileVersion>6.0.6</FileVersion>
-    <Version>6.0.6</Version>
+    <Version>6.0.7</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIconUrl />
   </PropertyGroup>

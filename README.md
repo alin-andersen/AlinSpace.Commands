@@ -8,6 +8,8 @@ A simple library offering asynchronous command and powerful command manager.
 The *AlinSpace.Commands.ICommand* interface is very similar to the *System.Windows.Input.ICommand* interface, but they are **not** the same.
 The *AlinSpace.Commands.ICommand* interface is a fully asynchronous command interface, whereas *System.Windows.Input.ICommand* is **not**.
 
+You can replace *System.Windows.Input.ICommand* with *AlinSpace.Commands.ICommand* with no worries. Implict cast will make sure that an instance of *System.Windows.Input.ICommand* will be created when needed.
+
 [NuGet package](https://www.nuget.org/packages/AlinSpace.Commands/)
 
 ## Examples - *AlinSpace.Commands.Command*
@@ -117,3 +119,8 @@ When you press the *Block10Command* the command manager will lock the *Block10Co
 If you wait 5 seconds and then execute the *Block20Command* command, all commands will be locked for another 20 seconds.
 After waiting for 5 seconds the *Block10Command* will be done and unlock its group, but because the other command group still blocks all groups for another 15 seconds, *Block10Command* will stay blocked for 15 seconds.
 *Block10Command* and *Block20Command* will both be unlocked at the same time.
+
+# Manager Settings
+
+There are a couple of manager settings:
+- **
