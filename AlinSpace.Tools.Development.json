@@ -1,0 +1,17 @@
+{
+  "PathToSolutionFile": "AlinSpace.Commands.sln",
+  "PathToLocalNugetFolder": "C:\\AlinSpace\\Nuget",
+  "PathToDebugFiles": "C:\\AlinSpace\\Pdbs",
+  "BuildInDebugConfiguration": true,
+  "Author": "Alin Andersen",
+  "Copyright": "Copyright © 2022 Alin Andersen",
+  "RepositoryUrl": "https://github.com/onixion/AlinSpace.Commands",
+  "ProjectUrl": "https://github.com/onixion/AlinSpace.Commands",
+  "Tags": "alinspace; alin; space",
+  "Projects": [
+    {
+      "Name": "AlinSpace.Commands",
+      "Tags": "commands; command; cmd; manager; commandmanager;"
+    }
+  ]
+}
