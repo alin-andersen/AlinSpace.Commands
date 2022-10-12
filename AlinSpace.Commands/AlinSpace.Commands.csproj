@@ -1,14 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0;</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <PackageTags>alinspace; alin; space, commands; command; cmd; manager; commandmanager</PackageTags>
     <PackageProjectUrl>https://github.com/onixion/AlinSpace.Commands</PackageProjectUrl>
     <Copyright>Copyright © 2022 Alin Andersen</Copyright>
-    <Company>
-    </Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/onixion/AlinSpace.Commands</RepositoryUrl>
@@ -16,20 +14,13 @@
     <Authors>Alin Andersen</Authors>
     <Product>AlinSpace.Command</Product>
     <Description>Pure asynchronous command implementation and powerful command manager.</Description>
-    <Version>6.0.8</Version>
+    <Version>6.1.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIconUrl />
+	<PackageIconUrl>Icon.png</PackageIconUrl>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="Icon.png">
-      <Pack>True</Pack>
-      <PackagePath>
-      </PackagePath>
-    </None>
+	<None Include="README.md" Pack="true" PackagePath="" />
+	<None Include="Icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AlinSpace" Version="6.0.0" />
