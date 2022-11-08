@@ -19,17 +19,17 @@ jobs:
       with:
         dotnet-version: 6.0.x
         
-    - name: Restore dependencies
+    - name: Restore
       run: dotnet restore
       
     - name: Build
-      run: dotnet build --no-restore -c Release
+      run: dotnet build -c Release --no-restore
        
-    - name: Tests
-      run: dotnet test AlinSpace.Commands.Tests/AlinSpace.Commands.Tests.csproj
+    - name: Test
+      run: dotnet test AlinSpace.Commands.UnitTests/AlinSpace.Commands.UnitTests.csproj
 
     - name: Package
-      run: dotnet pack -c Release -o . AlinSpace.Commands/AlinSpace.Commands.csproj
+      run: dotnet pack AlinSpace.Commands/AlinSpace.Commands.csproj -o . --no-build
       
     - name: Publish
-      run: dotnet nuget push AlinSpace.Commands.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push AlinSpace.Commands.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
