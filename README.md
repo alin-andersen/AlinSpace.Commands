@@ -21,7 +21,7 @@ This is the *AsyncCommand*:
 var command = AsyncCommand
     .New()
     .SetCanChange(_ => canExecute)
-    .SEtExecuteAsync(ExecuteSomethingAsync);
+    .SetExecuteAsync(ExecuteSomethingAsync);
     
 var genericCommand = AsyncCommand
     .New<int>()
