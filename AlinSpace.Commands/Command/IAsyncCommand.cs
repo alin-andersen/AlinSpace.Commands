@@ -6,7 +6,7 @@ namespace AlinSpace.Commands
     /// <summary>
     /// Represents an asynchronous command interface.
     /// </summary>
-    public interface ICommand
+    public interface IAsyncCommand
     {
         /// <summary>
         /// Can execute changed.
@@ -14,19 +14,24 @@ namespace AlinSpace.Commands
         /// <remarks>
         /// Raised when <see cref="CanExecute(object)"/> changes.
         /// </remarks>
-        event EventHandler CanExecuteChanged;
+        event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Can command execute.
+        /// Raises the <see cref="CanExecuteChanged"/> event.
+        /// </summary>
+        void RaiseCanExecuteChanged();
+
+        /// <summary>
+        /// Evaluates whether or not the command can execute asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>True, if command can be executed; false otherwise.</returns>
-        bool CanExecute(object parameter = null);
+        bool CanExecute(object? parameter = null);
 
         /// <summary>
-        /// Execute command asynchronously.
+        /// Executes the command asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        Task ExecuteAsync(object parameter = null);
+        Task ExecuteAsync(object? parameter = null);
     }
 }

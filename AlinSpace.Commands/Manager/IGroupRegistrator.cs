@@ -10,6 +10,6 @@
         /// </summary>
         /// <param name="command">Command to register.</param>
         /// <returns>Registered command.</returns>
-        ICommand Register(ICommand command);
+        IAsyncCommand Register(IAsyncCommand command);
     }
 }

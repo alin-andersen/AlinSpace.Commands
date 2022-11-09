@@ -4,34 +4,17 @@ using System.Threading.Tasks;
 namespace AlinSpace.Commands
 {
     /// <summary>
-    /// Default implementation of <see cref="ICommand{TParameter}"/>.
+    /// Default implementation of <see cref="IAsyncCommand{TParameter}"/>.
     /// </summary>
-    public class Command<TParameter> : AbstractCommand<TParameter>
+    public class AsyncCommand<TParameter> : AbstractAsyncCommand<TParameter>
     {
         private readonly bool verifyCanExecuteBeforeExecution;
         private readonly bool continueOnCapturedContext;
 
-        private Func<TParameter, Task> executeFunc;
-        private Func<TParameter, bool> canExecuteFunc;
+        private Func<TParameter?, Task>? executeFunc;
+        private Func<TParameter?, bool>? canExecuteFunc;
 
-        /// <summary>
-        /// Static factory method.
-        /// </summary>
-        /// <param name="verifyCanExecuteBeforeExecution">
-        /// This flag indicates whether or not the can execute shall should be called and checked before execution.
-        /// </param>
-        /// <param name="continueOnCapturedContext">
-        /// This flag indicates whether or not the command shall be executed on the captured context.
-        /// </param>
-        /// <returns>Async command.</returns>
-        public static Command<TParameter> New(
-            bool verifyCanExecuteBeforeExecution = false,
-            bool continueOnCapturedContext = true)
-        {
-            return new Command<TParameter>(
-                verifyCanExecuteBeforeExecution,
-                continueOnCapturedContext);
-        }
+        #region Construction
 
         /// <summary>
         /// Constructor.
@@ -42,7 +25,7 @@ namespace AlinSpace.Commands
         /// <param name="continueOnCapturedContext">
         /// This flag indicates whether or not the command shall be executed on the captured context.
         /// </param>
-        public Command(
+        public AsyncCommand(
             bool verifyCanExecuteBeforeExecution = false,
             bool continueOnCapturedContext = true)
         {
@@ -51,33 +34,60 @@ namespace AlinSpace.Commands
         }
 
         /// <summary>
-        /// On can execute callback.
+        /// Creates a new asynchronous command
         /// </summary>
-        /// <param name="executeFunc"></param>
-        /// <returns>Async command.</returns>
-        public Command<TParameter> OnCanExecute(Func<TParameter, bool> canExecuteFunc)
+        /// <param name="verifyCanExecuteBeforeExecution">
+        /// This flag indicates whether or not the can execute shall should be called and checked before execution.
+        /// </param>
+        /// <param name="continueOnCapturedContext">
+        /// This flag indicates whether or not the command shall be executed on the captured context.
+        /// </param>
+        /// <returns>Asynchronous command.</returns>
+        public static AsyncCommand<TParameter> New(
+            bool verifyCanExecuteBeforeExecution = false,
+            bool continueOnCapturedContext = true)
+        {
+            return new AsyncCommand<TParameter>(
+                verifyCanExecuteBeforeExecution,
+                continueOnCapturedContext);
+        }
+
+        #endregion
+
+        #region Setters
+
+        /// <summary>
+        /// Sets the asynchronously can execute function.
+        /// </summary>
+        /// <param name="canExecuteFunc">Can execute func.</param>
+        /// <returns>Asynchronous command.</returns>
+        public AsyncCommand<TParameter> SetCanExecute(Func<TParameter?, bool>? canExecuteFunc)
         {
             this.canExecuteFunc = canExecuteFunc;
             return this;
         }
 
         /// <summary>
-        /// On execute asynchronously callback.
+        /// Sets the asynchronously execute function.
         /// </summary>
-        /// <param name="executeAction"></param>
-        /// <returns>Async command.</returns>
-        public Command<TParameter> OnExecuteAsync(Func<TParameter, Task> executeFunc)
+        /// <param name="executeFunc">Execute func.</param>
+        /// <returns>Asynchronous command.</returns>
+        public AsyncCommand<TParameter> OnExecuteAsync(Func<TParameter?, Task>? executeFunc)
         {
             this.executeFunc = executeFunc;
             return this;
         }
 
+        #endregion
+
+        #region IAsyncCommand
+
         /// <summary>
-        /// Can execute.
+        /// Evaluates whether or not the command can execute asynchronously.
         /// </summary>
-        /// <param name="parameter">Parameter.</param>
-        /// <returns>True if can execute; false otherwise.</returns>
-        public override bool CanExecute(TParameter parameter = default)
+        /// <param name="parameter">Command parameter.</param>
+        /// <returns>True, if command can be executed; false otherwise.</returns>
+        public override bool CanExecute(TParameter? parameter = default)
         {
             if (canExecuteFunc == null)
                 return true;
@@ -86,11 +96,10 @@ namespace AlinSpace.Commands
         }
 
         /// <summary>
-        /// Execute command asynchronously.
+        /// Executes the command asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        /// <returns>Task.</returns>
-        public override async Task ExecuteAsync(TParameter parameter = default)
+        public override async Task ExecuteAsync(TParameter? parameter = default)
         {
             if (executeFunc == null)
                 return;
@@ -103,5 +112,7 @@ namespace AlinSpace.Commands
 
             await executeFunc(parameter).ConfigureAwait(continueOnCapturedContext);
         }
+
+        #endregion
     }
 }

@@ -3,7 +3,7 @@
 namespace AlinSpace.Commands.Tests
 {
     /// <summary>
-    /// Tests for <see cref="Command"/> and <see cref="Command{TParameter}"/>.
+    /// Tests for <see cref="AsyncCommand"/> and <see cref="Command{TParameter}"/>.
     /// </summary>
     public class CommandTests
     {

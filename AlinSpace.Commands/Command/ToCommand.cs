@@ -1,22 +1,26 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace AlinSpace.Commands
 {
     /// <summary>
-    /// <see cref="System.Windows.Input.ICommand"/> to <see cref="ICommand"/>.
+    /// <see cref="AsyncCommand"/> to <see cref="ICommand"/>.
     /// </summary>
     public class ToCommand : ICommand
     {
-        readonly global::System.Windows.Input.ICommand command;
+        private readonly IAsyncCommand command;
+        private readonly bool fireAndForgetWhenExecuted;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="command">Command.</param>
-        public ToCommand(global::System.Windows.Input.ICommand command)
+        /// <param name="command">Asynchronous command.</param>
+        /// <param name="fireAndForgetWhenExecuted">Flag indicates whether or not the asynchronous command shall be fire and forget when executed.</param>
+        public ToCommand(IAsyncCommand command, bool fireAndForgetWhenExecuted = true)
         {
             this.command = command ?? throw new ArgumentNullException(nameof(command));
+            this.fireAndForgetWhenExecuted = fireAndForgetWhenExecuted;
+
             command.CanExecuteChanged += (sender, args) => CanExecuteChanged(sender, args);
         }
 
@@ -26,27 +30,30 @@ namespace AlinSpace.Commands
         /// <remarks>
         /// Raised when <see cref="CanExecute(object)"/> changes.
         /// </remarks>
-        public event EventHandler CanExecuteChanged = delegate { };
+        public event EventHandler? CanExecuteChanged = delegate { };
 
         /// <summary>
-        /// Can command execute.
+        /// Evaluates whether or not the command can execute asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>True, if command can be executed; false otherwise.</returns>
-        public bool CanExecute(object parameter = null)
+        public bool CanExecute(object? parameter = null)
         {
             return command.CanExecute(parameter);
         }
 
         /// <summary>
-        /// Execute command asynchronously.
+        /// Executes the command.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        /// <returns>Task.</returns>
-        public Task ExecuteAsync(object parameter = null)
+        public void Execute(object? parameter = null)
         {
-            command.Execute(parameter);
-            return Task.CompletedTask;
+            var task = command.ExecuteAsync(parameter);
+
+            if (!fireAndForgetWhenExecuted)
+            {
+                task.Wait();
+            }
         }
     }
 }

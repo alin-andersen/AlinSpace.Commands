@@ -1,6 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <Version>0.0.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AlinSpace.UnitTesting" Version="1.0.1" />
@@ -10,9 +11,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\AlinSpace.Commands\AlinSpace.Commands.csproj" />
   </ItemGroup>
-
 </Project>

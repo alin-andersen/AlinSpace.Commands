@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the manager settings.
     /// </summary>
-    public class ManagerSettings
+    public class AsyncManagerSettings
     {
         /// <summary>
         /// Verify CanExecute allows execution before invoking a command.
@@ -28,87 +28,82 @@
         /// <summary>
         /// Raises can execute changed on all commands after command execution.
         /// </summary>
-        public bool RaiseCanExecuteChangedOnAllAfterCommandExecution { get; } = false;
+        public bool RaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution { get; } = false;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="verifyCanExecuteBeforeExecution"></param>
-        /// <param name="ignoreIndividualCanExecute"></param>
-        /// <param name="ignoreExceptionsFromCommands"></param>
-        /// <param name="continueOnCapturedContext"></param>
-        /// <param name="raiseCanExecuteChangedOnAllAfterCommandExecution"></param>
-        public ManagerSettings(
+        public AsyncManagerSettings(
             bool verifyCanExecuteBeforeExecution = true,
             bool ignoreIndividualCanExecute = false,
             bool ignoreExceptionsFromCommands = true,
             bool continueOnCapturedContext = true,
-            bool raiseCanExecuteChangedOnAllAfterCommandExecution = false)
+            bool raiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution = false)
         {
             VerifyCanExecuteBeforeExecution = verifyCanExecuteBeforeExecution;
             IgnoreIndividualCanExecute = ignoreIndividualCanExecute;
             IgnoreExceptionsFromCommands = ignoreExceptionsFromCommands;
             ContinueOnCapturedContext = continueOnCapturedContext;
-            RaiseCanExecuteChangedOnAllAfterCommandExecution = raiseCanExecuteChangedOnAllAfterCommandExecution;
+            RaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution = raiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution;
         }
 
         /// <summary>
         /// Create default settings.
         /// </summary>
         /// <returns>Default settings.</returns>
-        public static ManagerSettings Default()
+        public static AsyncManagerSettings Default()
         {
-            return new ManagerSettings();
+            return new AsyncManagerSettings();
         }
 
-        public ManagerSettings WithVerifyCanExecuteBeforeExecution(bool enable)
+        public AsyncManagerSettings WithVerifyCanExecuteBeforeExecution(bool enable)
         {
-            return new ManagerSettings(
+            return new AsyncManagerSettings(
                 verifyCanExecuteBeforeExecution: enable,
                 ignoreIndividualCanExecute: IgnoreIndividualCanExecute,
                 ignoreExceptionsFromCommands: IgnoreExceptionsFromCommands,
                 continueOnCapturedContext: ContinueOnCapturedContext,
-                raiseCanExecuteChangedOnAllAfterCommandExecution: RaiseCanExecuteChangedOnAllAfterCommandExecution);
+                raiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution: RaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution);
         }
 
-        public ManagerSettings WithIgnoreIndividualCanExecute(bool enable)
+        public AsyncManagerSettings WithIgnoreIndividualCanExecute(bool enable)
         {
-            return new ManagerSettings(
+            return new AsyncManagerSettings(
                 verifyCanExecuteBeforeExecution: VerifyCanExecuteBeforeExecution,
                 ignoreIndividualCanExecute: enable,
                 ignoreExceptionsFromCommands: IgnoreExceptionsFromCommands,
                 continueOnCapturedContext: ContinueOnCapturedContext,
-                raiseCanExecuteChangedOnAllAfterCommandExecution: RaiseCanExecuteChangedOnAllAfterCommandExecution);
+                raiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution: RaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution);
         }
 
-        public ManagerSettings WithIgnoreExceptionsFromCommands(bool enable)
+        public AsyncManagerSettings WithIgnoreExceptionsFromCommands(bool enable)
         {
-            return new ManagerSettings(
+            return new AsyncManagerSettings(
                 verifyCanExecuteBeforeExecution: VerifyCanExecuteBeforeExecution,
                 ignoreIndividualCanExecute: IgnoreIndividualCanExecute,
                 ignoreExceptionsFromCommands: enable,
                 continueOnCapturedContext: ContinueOnCapturedContext,
-                raiseCanExecuteChangedOnAllAfterCommandExecution: RaiseCanExecuteChangedOnAllAfterCommandExecution);
+                raiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution: RaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution);
         }
 
-        public ManagerSettings WithContinueOnCapturedContext(bool enable)
+        public AsyncManagerSettings WithContinueOnCapturedContext(bool enable)
         {
-            return new ManagerSettings(
+            return new AsyncManagerSettings(
                 verifyCanExecuteBeforeExecution: VerifyCanExecuteBeforeExecution,
                 ignoreIndividualCanExecute: IgnoreIndividualCanExecute,
                 ignoreExceptionsFromCommands: IgnoreExceptionsFromCommands,
                 continueOnCapturedContext: enable,
-                raiseCanExecuteChangedOnAllAfterCommandExecution: RaiseCanExecuteChangedOnAllAfterCommandExecution);
+                raiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution: RaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution);
         }
 
-        public ManagerSettings WithRaiseCanExecuteChangedOnAllAfterCommandExecution(bool enable)
+        public AsyncManagerSettings WithRaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution(bool enable)
         {
-            return new ManagerSettings(
+            return new AsyncManagerSettings(
                 verifyCanExecuteBeforeExecution: VerifyCanExecuteBeforeExecution,
                 ignoreIndividualCanExecute: IgnoreIndividualCanExecute,
                 ignoreExceptionsFromCommands: IgnoreExceptionsFromCommands,
                 continueOnCapturedContext: ContinueOnCapturedContext,
-                raiseCanExecuteChangedOnAllAfterCommandExecution: enable);
+                raiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution: enable);
         }
     }
 }

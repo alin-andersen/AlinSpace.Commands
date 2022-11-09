@@ -1,51 +1,52 @@
 # AlinSpace.Commands
 [![NuGet version (AlinSpace.Commands)](https://img.shields.io/nuget/v/AlinSpace.Commands.svg?style=flat-square)](https://www.nuget.org/packages/AlinSpace.Commands/)
 
-A simple library offering asynchronous command and powerful command manager.
-
-The *AlinSpace.Commands.ICommand* interface is very similar to the *System.Windows.Input.ICommand* interface, but they are **not** the same.
-The *AlinSpace.Commands.ICommand* interface is a fully asynchronous command interface, whereas *System.Windows.Input.ICommand* is **not**.
-
-You can replace *System.Windows.Input.ICommand* with *AlinSpace.Commands.ICommand* with no worries. Implict cast will make sure that an instance of *System.Windows.Input.ICommand* will be created when needed.
+An asynchronous command and command manager implementation.
 
 [NuGet package](https://www.nuget.org/packages/AlinSpace.Commands/)
 
-## Examples - *AlinSpace.Commands.Command*
+# Why?
 
-This is the *AlinSpace.Commands.Command*:
+When you need or have **complex concurrent command locking rules**, this library is something for you.
+
+# Asynchronous Commands
+
+## Examples - *AsyncCommand*
+
+This is the *AsyncCommand*:
 
  ```csharp
-var command = Command
+var command = AsyncCommand
     .New()
-    .OnCanChange(_ => canExecute)
-    .OnExecuteAsync(ExecuteSomethingAsync);
+    .SetCanChange(_ => canExecute)
+    .SEtExecuteAsync(ExecuteSomethingAsync);
     
-var genericCommand = Command
+var genericCommand = AsyncCommand
     .New<int>()
-    .OnCanChange(_ => canExecute)
-    .OnExecuteAsync(ExecuteSomethingWithIntAsync);
+    .SetCanChange(_ => canExecute)
+    .SetExecuteAsync(ExecuteSomethingWithIntAsync);
     
 ```
 
-## Examples - *AlinSpace.Commands.AbstractCommand*
+## Examples - *AbstractAsyncCommand*
 
-This is the *AlinSpace.Commands.AbstractCommand*:
+This is the *AbstractAsyncCommand*:
 
  ```csharp
-public class MyCommand : AbstractCommand
+public class MyAsyncCommand : AbstractAsyncCommand
 {
     ...
-    public async Task ExecuteAsync(object parameter = null)
+    public async Task ExecuteAsync(object? parameter = null)
     {
         await DoSomethingAsync(parameter);
     }
     ...
 }
 
-public class MyGenericCommand<int> : AbstractCommand
+public class MyGenericAsyncCommand<int> : AbstractAsyncCommand
 {
     ...
-    public async Task ExecuteAsync(int parameter = null)
+    public async Task ExecuteAsync(int? parameter = null)
     {
         await DoSomethingWithIntAsync(parameter);
     }
@@ -53,20 +54,22 @@ public class MyGenericCommand<int> : AbstractCommand
 }
 ```
 
-## Examples - *AlinSpace.Commands.Manager*
+# Asynchronous Command Manager
 
-The *AlinSpace.Commands.Manager* allows to create *command groups*. 
-Command groups dictate the availability of command execution.
-Commands are registered to one command group.
-When registering a *ICommand* to a group, it will return an *ICommand* instance.
-This instance can be passed to the view that consumes the command.
+The *AsyncManager* allows you to create *command execution groups*. 
+Command execution groups dictate the availability of command execution.
+Commands are registered to one (or more) command groups.
+When registering a *IAsyncCommand* to a group, it will return a new instance of *IAsyncCommand*.
+This instance can be passed to the view that will act on the the command.
 The command manager will hide all the logic for locking, unlocking, and notifying commands for you.
-Additionally, each registered Async command can also add instance-specific logic for CanExecute.
+Additionally, each registered asynchronous command can also add command-specific logic for CanExecute.
+
+## Examples - *AsyncManager*
 
 Here are some examples:
 
 ```csharp
-Manager
+AsyncManager
     .New()
     .LockAll(e => 
     {
@@ -88,7 +91,7 @@ These are the currently supported group lock behaviors:
  However, the *SearchCommand* will lock all commands registered to the command manager except itself when executed.
  
  ```csharp
-Manager
+AsyncManager
     .New()
     .LockAll(eg => 
     {
@@ -107,7 +110,7 @@ The *Block10Command* will do 10 seconds of work.
 The *Block20Command* will do 20 seconds of work.
 
 ```csharp
-Manager
+AsyncManager
     .New()
     .LockThis(eg => Block10Command = eg.Register(Block10Command))
     .LockAll(eg => Block20Command = eg.Register(Block20Command));
@@ -118,7 +121,11 @@ If you wait 5 seconds and then execute the *Block20Command* command, all command
 After waiting for 5 seconds the *Block10Command* will be done and unlock its group, but because the other command group still blocks all groups for another 15 seconds, *Block10Command* will stay blocked for 15 seconds.
 *Block10Command* and *Block20Command* will both be unlocked at the same time.
 
-# Manager Settings
+## AsyncManager Settings
 
 There are a couple of manager settings:
-- **
+- **VerifyCanExecuteBeforeExecution**: This will force the manager to call *CanExecute* before any command execution.
+- **IgnoreIndividualCanExecute**: This will ignore the *CanExecute* method of the command itself and only listen to the command manager.
+- **IgnoreExceptionsFromCommands**: This will ignore any exceptions thrown by any given command. This is useful when you never ever want to crash your application and instead ignore it silently.
+- **ContinueOnCapturedContext**: Whether or not to continue on the captured context.
+- **RaiseCanExecuteChangedOnAllCommandsAfterAnyCommandExecution**: Raise *CanExeucteChanged* on all commands after any command executed.

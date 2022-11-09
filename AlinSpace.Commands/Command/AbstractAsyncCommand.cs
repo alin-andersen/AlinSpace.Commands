@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 namespace AlinSpace.Commands
 {
     /// <summary>
-    /// Abstract implementation of <see cref="ICommand"/>.
+    /// Abstract implementation of the <see cref="IAsyncCommand"/> interface.
     /// </summary>
-    public abstract class AbstractCommand : ICommand
+    public abstract class AbstractAsyncCommand : IAsyncCommand
     {
         /// <summary>
         /// Can execute changed.
@@ -14,30 +14,30 @@ namespace AlinSpace.Commands
         /// <remarks>
         /// Raised when <see cref="CanExecute(object)"/> changes.
         /// </remarks>
-        public event EventHandler CanExecuteChanged = delegate { };
+        public event EventHandler? CanExecuteChanged = delegate { };
 
         /// <summary>
-        /// Raises <see cref="CanExecuteChanged"/>.
+        /// Raises the <see cref="CanExecuteChanged"/> event.
         /// </summary>
-        protected void RaiseCanExecuteChanged()
+        public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged(this, EventArgs.Empty);
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
-        /// Can command execute.
+        /// Evaluates whether or not the command can execute asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>True, if command can be executed; false otherwise.</returns>
-        public virtual bool CanExecute(object parameter = null)
+        public virtual bool CanExecute(object? parameter = null)
         {
             return true;
         }
 
         /// <summary>
-        /// Execute command asynchronously.
+        /// Executes the command asynchronously.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        public abstract Task ExecuteAsync(object parameter = null);
+        public abstract Task ExecuteAsync(object? parameter = null);
     }
 }

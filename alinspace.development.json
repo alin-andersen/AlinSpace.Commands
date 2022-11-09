@@ -11,7 +11,7 @@
   "Projects": [
     {
       "Name": "AlinSpace.Commands",
-      "Tags": "commands; command; cmd; manager; commandmanager;"
+      "Tags": "commands; command; async; asynchronous; manager; commandmanager;"
     }
   ]
 }

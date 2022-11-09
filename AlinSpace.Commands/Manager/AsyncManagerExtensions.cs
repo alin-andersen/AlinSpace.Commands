@@ -5,7 +5,7 @@ namespace AlinSpace.Commands
     /// <summary>
     /// Extensions for <see cref="IAsyncCommandManager"/>.
     /// </summary>
-    public static class ManagerExtensions
+    public static class AsyncManagerExtensions
     {
         /// <summary>
         /// When executing a command from this group lock all groups.
@@ -13,7 +13,7 @@ namespace AlinSpace.Commands
         /// <param name="manager">Command manager.</param>
         /// <param name="commandRegistrations">Command registrations.</param>
         /// <returns>Command manager.</returns>
-        public static IManager LockAll(this IManager manager, Action<IGroupRegistrator> commandRegistrations)
+        public static IAsyncManager LockAll(this IAsyncManager manager, Action<IGroupRegistrator> commandRegistrations)
         {
             return manager.AddGroup(commandRegistrations, GroupLockBehavior.LockAllGroups);
         }
@@ -24,7 +24,7 @@ namespace AlinSpace.Commands
         /// <param name="manager">Command manager.</param>
         /// <param name="commandRegistrations">Command registrations.</param>
         /// <returns>Command manager.</returns>
-        public static IManager LockOthers(this IManager manager, Action<IGroupRegistrator> commandRegistrations)
+        public static IAsyncManager LockOthers(this IAsyncManager manager, Action<IGroupRegistrator> commandRegistrations)
         {
             return manager.AddGroup(commandRegistrations, GroupLockBehavior.LockAllOtherGroups);
         }
@@ -35,7 +35,7 @@ namespace AlinSpace.Commands
         /// <param name="manager">Command manager.</param>
         /// <param name="commandRegistrations">Command registrations.</param>
         /// <returns>Command manager.</returns>
-        public static IManager LockThis(this IManager manager, Action<IGroupRegistrator> commandRegistrations)
+        public static IAsyncManager LockThis(this IAsyncManager manager, Action<IGroupRegistrator> commandRegistrations)
         {
             return manager.AddGroup(commandRegistrations, GroupLockBehavior.LockThisGroup);
         }
@@ -46,7 +46,7 @@ namespace AlinSpace.Commands
         /// <param name="manager">Command manager.</param>
         /// <param name="commandRegistrations">Command registrations.</param>
         /// <returns>Command manager.</returns>
-        public static IManager LockNothing(this IManager manager, Action<IGroupRegistrator> commandRegistrations)
+        public static IAsyncManager LockNothing(this IAsyncManager manager, Action<IGroupRegistrator> commandRegistrations)
         {
             return manager.AddGroup(commandRegistrations, GroupLockBehavior.LockNothing);
         }

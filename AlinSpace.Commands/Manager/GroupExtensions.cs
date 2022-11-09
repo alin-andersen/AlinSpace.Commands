@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="registrator">Group registrator.</param>
         /// <param name="command">Command to register.</param>
-        public static void Register(this IGroupRegistrator registrator, ref ICommand command)
+        public static void Register(this IGroupRegistrator registrator, ref IAsyncCommand command)
         {
             command = registrator.Register(command);
         }
